@@ -154,9 +154,9 @@
         },
         data:null,
         routeIds:[
-          {label: '服务器', value: 'ladder_server_route'},
-          {label: '广告', value: 'ladder_ads_route'},
-          {label: '日志', value: 'ladder_event_route'}
+          {label: '服务器', value: 'DCT_server_route'},
+          {label: '广告', value: 'DCT_ads_route'},
+          {label: '日志', value: 'DCT_event_route'}
 
         ],
         timeRanges: [
@@ -285,23 +285,23 @@
           } else {
             let that = this
             this.listQuery.routes.forEach(a=>{
-              if(a == 'ladder_server_route'){
+              if(a == 'DCT_server_route'){
                 that.serverStatusList.xlist = that.data.xpoint
                 that.serverlevelList.xlist = that.data.xpoint
-                that.serverStatusList.seriesList = that.data.routes.status.ladder_server_route
-                that.serverlevelList.seriesList = that.data.routes.level.ladder_server_route
+                that.serverStatusList.seriesList = that.data.routes.status.DCT_server_route
+                that.serverlevelList.seriesList = that.data.routes.level.DCT_server_route
               }
-              if(a == 'ladder_ads_route'){
+              if(a == 'DCT_ads_route'){
                 that.adsStatusList.xlist = that.data.xpoint
                 that.adslevelList.xlist = that.data.xpoint
-                that.adsStatusList.seriesList = that.data.routes.status.ladder_ads_route
-                that.adslevelList.seriesList = that.data.routes.level.ladder_ads_route
+                that.adsStatusList.seriesList = that.data.routes.status.DCT_ads_route
+                that.adslevelList.seriesList = that.data.routes.level.DCT_ads_route
               }
-              if(a == 'ladder_event_route'){
+              if(a == 'DCT_event_route'){
                 that.eventStatusList.xlist = that.data.xpoint
                 that.eventlevelList.xlist = that.data.xpoint
-                that.eventStatusList.seriesList = that.data.routes.status.ladder_event_route
-                that.eventlevelList.seriesList = that.data.routes.level.ladder_event_route
+                that.eventStatusList.seriesList = that.data.routes.status.DCT_event_route
+                that.eventlevelList.seriesList = that.data.routes.level.DCT_event_route
               }
             })
           }

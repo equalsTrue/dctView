@@ -8,7 +8,7 @@ import { sendLog } from '@/utils/LogRequest'
 let url = process.env.VUE_APP_VPN_API
 
 if (window.location.href.indexOf('sandbox') > 0) {
-  url = process.env.VUE_APP_TEST_LADDER_API
+  url = process.env.VUE_APP_TEST_DCT_API
 } else {
   url = process.env.VUE_APP_DCT_API
 }
@@ -56,7 +56,7 @@ service.interceptors.response.use(
   error => {
     console.error('response err:' + error)
     Message({
-      message: error.response ? (error.response.status === 500 ? 'LADDER 服务器异常！[请及时联系开发人员]' : 'VPN 异常：[' + error.message + ']') : '网络请求故障，请检查您的网络情况！',
+      message: error.response ? (error.response.status === 500 ? 'DCT 服务器异常！[请及时联系开发人员]' : 'VPN 异常：[' + error.message + ']') : '网络请求故障，请检查您的网络情况！',
       type: 'error',
       duration: 5 * 1000
     })

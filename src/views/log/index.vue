@@ -108,7 +108,7 @@ import { fetchLogList } from '@/api/log'
 import waves from '@/directive/waves'
 import clip from '@/utils/clipboard'
 import {fetchList} from "@/api/user";
-// import {fetchLogList} from "@/api/ladder"; // use clipboard directly
+// import {fetchLogList} from "@/api/DCT"; // use clipboard directly
 
 export default {
   name: 'log',

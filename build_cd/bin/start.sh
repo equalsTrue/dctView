@@ -8,7 +8,7 @@ curdir=$(cd "$(dirname "$0")"; pwd)
 DEPLOY_LOG=$1
 #rm -rf /data/www/*
 #cp -r dist/* /data/www
-mkdir -p /data/www/ladder-manager
-rm -rf /data/www/ladder-manager/*
-cp -r dist/* /data/www/ladder-manager
+mkdir -p /data/www/DCT-manager
+rm -rf /data/www/DCT-manager/*
+cp -r dist/* /data/www/DCT-manager
 

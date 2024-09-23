@@ -3,9 +3,9 @@
 VERSION=$1
 source /etc/profile
 if [ "${DEPLOY_ENV}" = "fat" ];then
-    SERVER_URL="http://sandbox.new.ladder-manager.starpavilion-digital.com/#/version-info"
+    SERVER_URL="http://sandbox.new.DCT-manager.starpavilion-digital.com/#/version-info"
 elif [ "${DEPLOY_ENV}" = "prod" ];then
-    SERVER_URL="http://ladder-manager.starpavilion-digital.com/#/version-info"
+    SERVER_URL="http://DCT-manager.starpavilion-digital.com/#/version-info"
 fi
 function Log(){
     dateFormat=`date "+%Y-%m-%d %H:%M:%S"`

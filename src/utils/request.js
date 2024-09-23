@@ -47,14 +47,14 @@ service.interceptors.response.use(
       })
       return Promise.reject('error')
     } else {
-      // sendLog('ladder-admin', response)
+      // sendLog('DCT-admin', response)
       return response.data
     }
   },
   error => {
     console.error('response err:' + error)
     Message({
-      message: error.response ? (error.response.status === 500 ? 'LADDER-ADMIN 服务器异常！[请及时联系开发人员]' : 'LADDER-ADMIN 异常：[' + error.message + ']') : '网络请求故障，请检查您的网络情况！',
+      message: error.response ? (error.response.status === 500 ? 'DCT-ADMIN 服务器异常！[请及时联系开发人员]' : 'DCT-ADMIN 异常：[' + error.message + ']') : '网络请求故障，请检查您的网络情况！',
       type: 'error',
       duration: 5 * 1000
     })
