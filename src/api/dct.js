@@ -137,3 +137,49 @@ export function queryAccountLog(params){
         data: params
     })
 }
+
+export function fetchProductGmvList(params){
+    return request({
+        url: '/dct/gmv/list',
+        method: 'post',
+        data: params
+    })
+}
+
+export function fetchPidGmvParams(){
+    return request({
+        url: '/dct/gmv/pid/list/params',
+        method: 'get'
+    })
+}
+
+export function fetchPidVideoList(pid,creator){
+    return request({
+        url: '/dct/gmv/video?pid=' + pid + '&creator=' + creator,
+        method: 'get'
+    })
+}
+
+export function fetchCreatorGmvParams(){
+    return request({
+        url: '/dct/gmv/creator/list/params',
+        method: 'get'
+    })
+}
+
+export function fetchPerCreatorList(params){
+    return request({
+        url: '/dct/gmv/single/creator',
+        method: 'post',
+        data: params
+    })
+}
+
+
+export function fetchPerPidList(params){
+    return request({
+        url: '/dct/gmv/single/pid',
+        method: 'post',
+        data: params
+    })
+}

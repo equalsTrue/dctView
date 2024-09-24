@@ -156,10 +156,6 @@ export default {
     detailId: {
       type: String,
       default: undefined
-    },
-    isRestock: {
-      type: Boolean,
-      default: false
     }
   },
   data() {
