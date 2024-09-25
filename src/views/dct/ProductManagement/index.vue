@@ -3,7 +3,7 @@
     <!-- 头部操作区 -->
     <div class="filter-container">
       <el-row>
-        <el-select v-model="listQuery.pid" multiple collapse-tags filterable clearable reserve-keyword placeholder="PID">
+        <el-select v-model="listQuery.pid" multiple collapse-tags filterable clearable reserve-keyword placeholder="PID" style="margin-left: 1%">
           <el-option
             v-for="item in pidList"
             :key="item"
@@ -16,7 +16,7 @@
           </el-option>
         </el-select>
 
-        <el-select v-model="listQuery.manager" style="margin-left: 20px" multiple collapse-tags filterable clearable reserve-keyword placeholder="管理人">
+        <el-select v-model="listQuery.manager" style="margin-left: 2%" multiple collapse-tags filterable clearable reserve-keyword placeholder="管理人">
           <el-option
               v-for="item in userList"
               :key="item"
@@ -31,7 +31,7 @@
 
 
 
-        <el-select v-model="listQuery.status" style="margin-left: 20px"multiple collapse-tags filterable clearable reserve-keyword placeholder="样品状态">
+        <el-select v-model="listQuery.status" style="margin-left: 2%" multiple collapse-tags filterable clearable reserve-keyword placeholder="样品状态">
           <el-option
               v-for="item in statusList"
               :key="item.value"
@@ -42,7 +42,7 @@
         </el-select>
 
 
-        <el-select v-model="listQuery.user" style="margin-left: 20px" multiple collapse-tags filterable clearable reserve-keyword placeholder="样品使用人">
+        <el-select v-model="listQuery.user" style="margin-left: 2%" multiple collapse-tags filterable clearable reserve-keyword placeholder="样品使用人">
           <el-option
               v-for="item in userList"
               :key="item"
@@ -56,7 +56,7 @@
         </el-select>
 
 
-        <el-select v-model="listQuery.outApply" style="margin-left: 20px" multiple collapse-tags filterable clearable reserve-keyword placeholder="出库申请">
+        <el-select v-model="listQuery.outApply" style="margin-left: 2%" multiple collapse-tags filterable clearable reserve-keyword placeholder="出库申请">
           <el-option
               v-for="item in outApplyList"
               :key="item.value"
@@ -66,16 +66,6 @@
           </el-option>
         </el-select>
 
-        <el-select v-model="listQuery.applyUser" style="margin-left: 20px" multiple collapse-tags filterable clearable placeholder="申请人">
-          <el-option v-for="item in userList"
-                     :key="item"
-                     :label="item"
-                     :value="item">
-            <span style="float: left">{{ item }}</span>
-          </el-option>
-        </el-select>
-
-
 
 
 
@@ -84,6 +74,15 @@
 
       <el-row style="margin-top: 20px">
         <!-- 搜索按钮 -->
+
+        <el-select v-model="listQuery.applyUser" style="margin-left: 1%" multiple collapse-tags filterable clearable placeholder="申请人">
+          <el-option v-for="item in userList"
+                     :key="item"
+                     :label="item"
+                     :value="item">
+            <span style="float: left">{{ item }}</span>
+          </el-option>
+        </el-select>
 
         <label style="font-size: 0.9em;color: #606266;margin-left: 20px" v-if="!isToday">到样时间：</label>
         <el-date-picker
@@ -97,24 +96,28 @@
             align="right">
         </el-date-picker>
 
-        <el-button v-if="!listLoading" v-waves class="filter-item" type="info" icon="el-icon-search" style="margin-left: 5%"
+
+      </el-row>
+
+      <el-row>
+        <el-button v-if="!listLoading" v-waves class="filter-item" type="info" icon="el-icon-search" style="margin-left: 1%;margin-top: 1%"
                    @click="handleFilter">{{ $t('table.search') }}
         </el-button>
         <el-button v-else class="filter-item" type="primary" icon="el-icon-loading">Loading</el-button>
         <!-- 添加按钮 -->
-        <el-button v-waves class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit"
+        <el-button v-waves class="filter-item" style="margin-left: 1%;margin-top: 1%" type="primary" icon="el-icon-edit"
                    @click="handleToAdd">{{ $t('table.add') }}
         </el-button>
 
-        <el-button v-waves class="filter-item" style="margin-left: 10px;" type="warning" icon="el-icon-message"
+        <el-button v-waves class="filter-item" style="margin-left: 1%;margin-top: 1%" type="warning" icon="el-icon-message"
                    @click="handleToApply">批量申请</el-button>
 
-        <el-button v-waves class="filter-item" style="margin-left: 10px;" type="success" icon="el-icon-check"
+        <el-button v-waves class="filter-item" style="margin-left: 1%;margin-top: 1%" type="success" icon="el-icon-check"
                    @click="handleToApprove">批量审批
         </el-button>
 
         <!-- 表格导出 -->
-        <el-button v-waves :loading="downloadLoading" class="filter-item" type="danger" icon="el-icon-download"
+        <el-button v-waves :loading="downloadLoading" class="filter-item" type="danger" icon="el-icon-download" style="margin-left: 1%;margin-top: 1%"
                    @click="handleDownload">{{ $t('table.export') }}
         </el-button>
 
@@ -134,7 +137,7 @@
       border
       fit
       highlight-current-row
-      style="min-width: 110%"
+      style="min-width: 130%"
       @selection-change="handleSelectionChange"
       @cell-dblclick="handleCellDoubleClick"
     >
@@ -153,26 +156,26 @@
         </template>
       </el-table-column>
 
-      <el-table-column min-width="30px" label="样品名称">
+      <el-table-column :min-width="calculateWidth" label="样品名称">
         <template slot-scope="scope">
           <span>{{ scope.row.productName }}</span>
         </template>
       </el-table-column>
 
 
-      <el-table-column min-width="30px" label="图片">
+      <el-table-column :min-width="calculateWidth" label="图片">
         <template slot-scope="scope">
           <img :src="scope.row.picture" height="50%" width="50%" >
         </template>
       </el-table-column>
 
-      <el-table-column min-width="20px" label="颜色">
+      <el-table-column :min-width="calculateWidth" label="颜色">
         <template slot-scope="scope">
           <span>{{ scope.row.color }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column min-width="20px" label="数量" column-key="count">
+      <el-table-column :min-width="calculateWidth" label="数量" column-key="count">
         <template slot-scope="scope">
           <span>{{ scope.row.count }}</span>
 
@@ -180,7 +183,7 @@
       </el-table-column>
 
 
-      <el-table-column min-width="20px" label="申请数量" column-key="applyCount">
+      <el-table-column :min-width="calculateWidth" label="申请数量" column-key="applyCount">
         <template slot-scope="scope">
           <span v-if="!scope.row.inputCountVisible">{{ scope.row.applyCount }}</span>
           <div v-if="scope.row.inputCountVisible && checkInOperator('applyCount')" >
@@ -197,31 +200,31 @@
         </template>
       </el-table-column>
 
-      <el-table-column min-width="20px" label="管理人">
+      <el-table-column :min-width="calculateWidth" label="管理人">
         <template slot-scope="scope">
           <span>{{ scope.row.manager }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column min-width="30px" label="区域">
+      <el-table-column :min-width="calculateWidth" label="区域">
         <template slot-scope="scope">
           <span>{{ scope.row.region }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column min-width="30px" label="存放地点">
+      <el-table-column :min-width="calculateWidth" label="存放地点">
         <template slot-scope="scope">
           <span>{{ scope.row.storeLocation }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column min-width="50px" label="PID">
+      <el-table-column :min-width="calculateWidth" label="PID">
         <template slot-scope="scope">
           <span>{{ scope.row.pid }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column min-width="20px" label="状态" column-key="status">
+      <el-table-column :min-width="calculateWidth" label="状态" column-key="status">
         <template slot-scope="scope">
           <span v-if="!scope.row.inputStatusVisible" :style=chooseColor(scope.row.status)>{{ handleStatus(scope.row.status) }}</span>
           <div v-if="scope.row.inputStatusVisible && checkInOperator('status')" style="width: 30px">
@@ -247,7 +250,7 @@
             </div>        </template>
       </el-table-column>
 
-      <el-table-column min-width="20px" label="使用人" column-key="user">
+      <el-table-column :min-width="calculateWidth" label="使用人" column-key="user">
         <template slot-scope="scope">
           <span v-if="!scope.row.inputUserVisible">{{ scope.row.user }}</span>
           <div v-if="scope.row.inputUserVisible && checkInOperator('user')" style="width: 30px">
@@ -274,7 +277,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column min-width="50px" label="出库申请" align="center">
+      <el-table-column width="200px" label="出库申请" align="center">
         <template slot-scope="scope">
           <el-switch v-model="scope.row.outApply" :active-value='1' :inactive-value='0' :width=50 inactive-text="未申请"
                      active-text="已申请"
@@ -283,7 +286,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column min-width="20px" label="申请人" column-key="applyUser">
+      <el-table-column :min-width="calculateWidth" label="申请人" column-key="applyUser">
         <template slot-scope="scope">
           <span v-if="!scope.row.inputApplyUserVisible">{{ scope.row.applyUser }}</span>
           <div v-if="scope.row.inputApplyUserVisible && checkInOperator('applyUser')" style="width: 30px">
@@ -313,7 +316,7 @@
 
 
 
-      <el-table-column align="center" :label="$t('table.actions')" width=150 class-name="small-padding fixed-width">
+      <el-table-column align="center" :label="$t('table.actions')" width="150px" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="danger" @click="handleToDelete(scope.row.id)">{{ $t('table.delete') }}</el-button>
           <el-button size="mini" type="primary" @click="handleToUpdate(scope.row)">{{ $t('table.update') }}</el-button>
@@ -467,9 +470,9 @@ export default {
       // 列表头部的筛选条件
       statusList: [
         {label: '已申样', value: 0},
-        {label: '申请中', value: 1},
-        {label: '拍摄中', value: 2},
-        {label: '到库', value: 3}
+        {label: '到库', value: 1},
+        {label: '申请中', value: 2},
+        {label: '拍摄中', value: 3}
       ],
       outApplyList:[
         {label: '未申请', value: 0},
@@ -510,10 +513,12 @@ export default {
     },
     // 获取列表数据
     getList() {
-      if (this.$store.state.tagsView.visitedViews.length > 0) {
-        const index = this.$store.state.tagsView.active
-        this.$store.state.tagsView.visitedViews[index].query = Object.assign({}, this.listQuery)
-      }
+      debugger
+      this.list = []
+      // if (this.$store.state.tagsView.visitedViews.length > 0) {
+      //   const index = this.$store.state.tagsView.active
+      //   this.$store.state.tagsView.visitedViews[index].query = Object.assign({}, this.listQuery)
+      // }
       this.listLoading = true
       if (this.isToday) {
         this.listQuery.begin = moment().utcOffset(0).format('YYYY-MM-DD')
@@ -546,16 +551,24 @@ export default {
         row.inputCountVisible = false
       }
     },
+    calculateWidth(){
+      let width = parseFloat(100/10).toFixed(2) + "%"
+      return width
+    },
     submitApply(row){
-      const param = {id: row.id,applyCount:row.applyCount, applyUser:row.applyUser, user:row.user,productName:row.productName, count:row.count}
-      applyProduct(param).then(response =>{
-        if(response.data == 'success'){
-          this.$message.success("已提交申请")
-        }else {
-          this.$message.error("申请出错")
-        }
-      })
-      this.getList()
+      if(row.status == 1){
+        const param = {id: row.id,applyCount:row.applyCount, applyUser:row.applyUser, user:row.user,productName:row.productName, count:row.count}
+        applyProduct(param).then(response =>{
+          if(response.data == 'success'){
+            this.getList()
+            this.$message.success("已提交申请")
+          }else {
+            this.$message.error("申请出错")
+          }
+        })
+      }else {
+        this.$message.error("当样品状态为到库才能申请")
+      }
     },
     chooseColor(status) {
       let str
@@ -613,6 +626,7 @@ export default {
       }).then(() => {
         updateProductInfo(params).then(response => {
           if (response.code === 200) {
+            that.getList()
             that.$notify({
               title: '成功',
               message: '更新成功',
@@ -620,7 +634,6 @@ export default {
               duration: 2000
             })
             this.closeVisible(type,row)
-            that.getList()
           }
         }).catch(err => {
           console.log(err)
@@ -647,13 +660,16 @@ export default {
           str = '已申样'
           break;
         case 1:
-          str = '申请中'
+          str = '在库'
               break;
         case 2:
-          str = '拍摄中'
+          str = '申请中'
               break;
+        case 3:
+          str = '拍摄中'
+          break;
         default:
-          str = '在库'
+          str = '未设置'
       }
       return str
     },
@@ -676,6 +692,7 @@ export default {
     handleToApply(){
       batchApplyProduct(this.multipleSelection).then(response =>{
         if(response.data == 'success'){
+          this.getList()
           this.$message.success("批量申请成功")
         }else {
           this.$message.error("批量申请失败")
@@ -690,12 +707,12 @@ export default {
       let params = {id:ids}
       approveProduct(params).then(response => {
         if(response.data == 'success'){
+          this.getList()
           this.$message.success("审批通过")
         }else {
           this.$message.error("审批失败")
         }
       })
-      this.getList()
     },
     checkInOperator(operator){
       if(this.operator.indexOf(operator) > -1 || this.operator.indexOf('all') > -1){

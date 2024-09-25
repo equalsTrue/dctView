@@ -94,16 +94,131 @@
                    @click="handleFilter">{{ $t('table.search') }}
         </el-button>
 
-        <el-button v-if="!listLoading" v-waves class="filter-item" type="success" icon="el-icon-search" style="margin-left: 2%"
+        <el-button v-if="!listLoading" v-waves class="filter-item" type="success" icon="el-icon-search" style="margin-left: 1%"
                    @click="handleFilterByDay">按天查询
         </el-button>
-        <el-button v-else class="filter-item" type="primary" icon="el-icon-loading" style="margin-left: 5%">Loading</el-button>
+
+        <el-button  v-waves class="filter-item" type="warning" @click="chooseSubmitFiles()" style="margin-left: 1%">
+          选取上传文件
+        </el-button>
+
+
+        <el-button v-waves class="filter-item" style="margin-left: 1%;" type="primary" @click="submitUpload">上传到服务器
+        </el-button>
+
+        <el-button   v-waves class="filter-item" type="danger" @click="downLoadDetailExcel"
+                    style="margin-left: 1%;background-color: purple">导出查询数据
+        </el-button>
+
         <!-- 添加按钮 -->
 
       </el-row>
 
 
     </div>
+
+
+    <el-dialog
+        title="选择上传报表"
+        :visible.sync="dialogFileVisible"
+        width="70%">
+
+      <el-form style="margin-left: 10px;" v-for="(item,index) of submitList" :model="item"
+               label-width="65px">
+
+        <el-card class="box-card" style="padding-top: 20px;padding-bottom: 10px;">
+          <el-row>
+            <el-col :span="4" style="margin-left: 1%">
+
+              <el-form-item label="选择GMV文件:" label-width="150px">
+                <input type="file" id="fileId" ref="fileId" title @change="upLoadGmvFile($event,index)"/>
+
+              </el-form-item>
+            </el-col>
+
+            <el-col :span="4" style="margin-left: 200px ">
+              <el-form-item label="选择VID文件:" label-width="150px">
+                <input type="file" id="fileId" ref="fileId" title @change="upLoadVidFile($event,index)"/>
+              </el-form-item>
+            </el-col>
+
+
+
+          </el-row>
+
+          <el-row>
+            <el-col :span="4" style="margin-left: 1%">
+              <el-form-item label="选择PID文件:" label-width="150px">
+                <input type="file" id="fileId" ref="fileId" title @change="upLoadPidFile($event,index)"/>
+              </el-form-item>
+            </el-col>
+
+            <el-col :span="4" style="margin-left: 200px">
+              <el-form-item label="选择Creator文件:" label-width="150px">
+                <input type="file" id="fileId" ref="fileId" title @change="upLoadCreatorFile($event,index)"/>
+              </el-form-item>
+            </el-col>
+
+          </el-row>
+
+          <el-row>
+
+            <el-col :span="4">
+              <el-form-item label-width="150px" prop="appName"
+                            label="请选择账号:">
+                <!--              <label style="font-size: 0.9em;color: #606266;margin-left: 40px">请选择上传平台：</label>-->
+                <el-select v-model="item.account" filterable clearable placeholder="account"
+                           style="width: 155px">
+                  <el-option v-for="item in accountList"
+                             :key="item"
+                             :label="item"
+                             :value="item">
+                    <span style="float: left">{{ item }}</span>
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+
+            <el-col :span="4" style="margin-left: 190px">
+              <el-form-item label-width="80px" prop="date"
+                            label="报表日期:">
+                <!--              <label style="font-size: 0.9em;color: #606266;margin-left: 40px">请选择上传平台：</label>-->
+                <div class="block">
+                  <el-date-picker
+                      style="width: 150px;"
+                      v-model="item.time"
+                      align="right"
+                      type="date"
+                      value-format="yyyy-MM-dd"
+                      placeholder="选择日期"
+                      :picker-options="submitPickerOptions">
+                  </el-date-picker>
+                </div>
+              </el-form-item>
+            </el-col>
+
+            <el-col :span="8">
+              <el-button type="primary" icon="el-icon-plus" circle style="margin-left: 110px" size="medium"
+                         @click="addSubmitList()"></el-button>
+
+              <el-button v-if="submitList.length > 1" type="danger" icon="el-icon-minus" circle
+                         style="margin-left: 55px"
+                         size="medium" @click="deleteSubmitList(item)"></el-button>
+            </el-col>
+
+          </el-row>
+
+
+        </el-card>
+
+
+      </el-form>
+
+
+      <el-button @click="dialogFileVisible = false">取 消</el-button>
+      <el-button type="primary" @click="dialogFileVisible = false">确 定</el-button>
+    </el-dialog>
+
 
     <!-- 表格 -->
     <el-table
@@ -247,7 +362,16 @@ import {parseTime} from '@/utils'
 import VueRouter from 'vue-router'
 import clip from '@/utils/clipboard'
 import moment from 'moment'
+import axios from 'axios'
 
+const defaultSubmit = {
+  time: '',
+  account: '',
+  vidFile: null,
+  gmvFile: null,
+  pidFile: null,
+  creatorFile: null
+}
 export default {
   name: 'Account',
   directives: {
@@ -291,6 +415,7 @@ export default {
           this.formatDateToday() + ' 23:59:59'
         ]
       },
+      dialogFileVisible: false,
       regionList:[],
       dialogLog: false,
       accountLogList:[],
@@ -298,6 +423,28 @@ export default {
         new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 7, 0, 0, 0),
         new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0)
       ],
+      submitPickerOptions: {
+        shortcuts: [{
+          text: '今天',
+          onClick(picker) {
+            picker.$emit('pick', new Date());
+          }
+        }, {
+          text: '昨天',
+          onClick(picker) {
+            const date = new Date();
+            date.setTime(date.getTime() - 3600 * 1000 * 24);
+            picker.$emit('pick', date);
+          }
+        }, {
+          text: '一周前',
+          onClick(picker) {
+            const date = new Date();
+            date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
+            picker.$emit('pick', date);
+          }
+        }]
+      },
       pickerOptions: {
         shortcuts: [{
           text: '最近一周',
@@ -330,6 +477,8 @@ export default {
       },
       // 选项框加载状态
       loading: false,
+      submitList:[],
+      accountList:['starp','vista'],
       // 列表头部的筛选条件
       statusList: [
         {label: '正常', value: 0},
@@ -371,6 +520,68 @@ export default {
       }).catch(err => {
         console.log(err)
       })
+    },
+
+
+    upLoadGmvFile(e, index) {
+      debugger
+      var file = e.target.files[0];
+      var form = {};
+      form = new FormData();
+      form.append('file', file);
+      this.submitList[index].gmvFile = file
+    },
+
+    upLoadVidFile(e, index) {
+      debugger
+      var file = e.target.files[0];
+      var form = {};
+      form = new FormData();
+      form.append('file', file);
+      this.submitList[index].vidFile = file
+    },
+
+    upLoadPidFile(e, index) {
+      debugger
+      var file = e.target.files[0];
+      var form = {};
+      form = new FormData();
+      form.append('file', file);
+      this.submitList[index].pidFile = file
+
+
+    },
+
+    upLoadCreatorFile(e, index) {
+      debugger
+      var file = e.target.files[0];
+      var form = {};
+      form = new FormData();
+      form.append('file', file);
+      this.submitList[index].createFile = file
+
+
+    },
+
+
+    addSubmitList() {
+      const submitReport = Object.assign({}, defaultSubmit)
+      this.submitList.push(submitReport)
+    },
+    deleteSubmitList(item) {
+      debugger
+      const index = this.submitList.indexOf(item)
+      if (index !== -1) {
+        this.submitList.splice(index, 1);
+      }
+    },
+
+    chooseSubmitFiles() {
+      this.dialogFileVisible = true
+      if (this.submitList.length == 0) {
+        const submitReport = Object.assign({}, defaultSubmit)
+        this.submitList.push(submitReport)
+      }
     },
     paresDate(time) {
       return moment(time).format('YYYY-MM-DD HH:mm:ss')
@@ -471,6 +682,36 @@ export default {
         return false
       }
     },
+
+    submitUpload() {
+      let list = this.submitList;
+      const formData = new FormData();
+      debugger
+      for (let i = 0; i < list.length; i++) {
+        const fn = new File([], 'null')
+        formData.append('gmvFile', this.submitList[i].gmvFile == null ? fn : this.submitList[i].gmvFile)
+        formData.append('vidFile', this.submitList[i].vidFile == null ? fn : this.submitList[i].vidFile)
+        formData.append('pidFile', this.submitList[i].pidFile == null ? fn : this.submitList[i].pidFile)
+        formData.append('creatorFile', this.submitList[i].creatorFile == null ? fn : this.submitList[i].creatorFile)
+        formData.append("account", list[i].account);
+        formData.append("times", list[i].time);
+      }
+      let url = this.uploadUrl()
+      axios({
+        url: url,
+        method: 'post',
+        processData: false,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: formData,
+      }).then((data) => {
+        console.log(data)
+      }).catch((error) => {
+        console.log(error)
+      });
+      this.uploading = false;
+    },
     // 修改筛选添加后重新加载列表数据
     handleFilter() {
       this.listQuery.page = 1
@@ -497,6 +738,15 @@ export default {
       this.multipleSelection = val
     },
     // 前往添加页面
+    uploadUrl() {
+      let url = process.env.VUE_APP_DCT_API
+      if (window.location.href.indexOf('sandbox') > 0) {
+        url = process.env.VUE_APP_TEST_DCT_API
+      } else {
+        url = process.env.VUE_APP_DCT_API
+      }
+      return url + '/dct/gmv/file/submit'
+    },
 
     handleDownload() {
       this.downloadLoading = true

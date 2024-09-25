@@ -17,11 +17,11 @@
           <el-input type="hidden" v-model="formData.id"></el-input>
         </el-form-item>
         <el-row :span="24">
-          <el-col :span="11">
+          <el-col >
 
             <el-row>
 
-              <el-col :span="10">
+              <el-col :span="6">
                 <el-form-item label-width="100px" style="margin-bottom: 40px;" label="商品名称:" prop="productName">
                   <el-input
                     placeholder="请输产品名称"
@@ -31,7 +31,7 @@
                 </el-form-item>
               </el-col>
 
-              <el-col :span="10">
+              <el-col :span="6" style="margin-left: 10%">
                 <el-form-item label-width="100px" style="margin-bottom: 40px;" label="商品图片:" prop="picture">
                   <el-upload
                     ref="submitPictureRef"
@@ -52,7 +52,7 @@
 
             <el-row>
 
-              <el-col :span="7">
+              <el-col :span="6">
                 <el-form-item label-width="100px" style="margin-bottom: 40px;" label="PID:" prop="pid">
                   <el-input class="rt-input" v-model="formData.pid"  style="">
                   </el-input>
@@ -69,13 +69,13 @@
             </el-row>
 
             <el-row>
-              <el-col :span="7">
+              <el-col :span="6">
                 <el-form-item label-width="100px" style="margin-bottom: 40px;" label="颜色:" prop="color">
                   <el-input class="rt-input" v-model="formData.color"  style="">
                   </el-input>
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
+              <el-col :span="10">
                 <el-form-item label-width="100px" style="margin-bottom: 40px;margin-left: 17%" label="区域:" prop="region">
                   <el-input class="rt-input" v-model="formData.region"  style="">
                   </el-input>
@@ -88,7 +88,7 @@
             <el-row>
 
 
-              <el-col :span="7">
+              <el-col :span="6">
 
                 <el-form-item label-width="100px" style="margin-bottom: 40px;" label="管理人:" prop="manager">
                   <el-select v-model="formData.manager" filterable clearable placeholder="请选择管理人" >
@@ -104,13 +104,32 @@
 
               </el-col>
 
-              <el-col :span="12">
+              <el-col :span="10">
                 <el-form-item label-width="100px" style="margin-bottom: 40px;margin-left: 17%" label="存放地点:" prop="location">
                   <el-input class="rt-input" v-model="formData.storeLocation"  style="">
                   </el-input>
                 </el-form-item>
               </el-col>
 
+            </el-row>
+
+
+            <el-row>
+              <el-col :span="6">
+
+                <el-form-item label-width="100px" style="margin-bottom: 40px;" label="状态:" prop="statys">
+                  <el-select v-model="formData.status" filterable clearable placeholder="请选择状态">
+                    <el-option
+                        v-for="item in statusList"
+                        :key="item.label"
+                        :label="item.label"
+                        :value="item.value">
+                      <span style="float: left">{{ item.label }}</span>
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+
+              </el-col>
             </el-row>
 
           </el-col>
@@ -140,6 +159,7 @@ const defaultForm = {
   storeLocation: '',
   count: 0,
   id: '',
+  status: '',
   productName: '',
   manager: ''
 }
@@ -195,6 +215,12 @@ export default {
       beforeCommodityData: Object.assign({}, defaultForm),
       localPageUser: '',
       users:[],
+      statusList:[
+        {label: '已申样', value: 0},
+        {label: '到库', value: 1},
+        {label: '申请中', value: 2},
+        {label: '拍摄中', value: 3}
+      ],
       fetchSuccess: true,
       loading: false,
       submitPictureUrl: '',
