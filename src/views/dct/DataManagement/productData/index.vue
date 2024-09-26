@@ -207,19 +207,19 @@
 
     </el-table>
 
-    <!-- 页码 -->
-    <div class="pagination-container">
-      <el-pagination
-        background
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="listQuery.page"
-        :page-sizes="[10,20,30,50]"
-        :page-size="listQuery.limit"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="total">
-      </el-pagination>
-    </div>
+<!--    &lt;!&ndash; 页码 &ndash;&gt;-->
+<!--    <div class="pagination-container">-->
+<!--      <el-pagination-->
+<!--        background-->
+<!--        @size-change="handleSizeChange"-->
+<!--        @current-change="handleCurrentChange"-->
+<!--        :current-page="listQuery.page"-->
+<!--        :page-sizes="[10,20,30,50]"-->
+<!--        :page-size="listQuery.limit"-->
+<!--        layout="total, sizes, prev, pager, next, jumper"-->
+<!--        :total="total">-->
+<!--      </el-pagination>-->
+<!--    </div>-->
 
 
 
@@ -270,8 +270,6 @@ export default {
       chooseGroupList:[],
       // 列表请求条件，既给接口传递的参数
       listQuery: {
-        page: 1,
-        limit: 10,
         level_1_category:[],
         level_2_category:[],
         pid:[],
@@ -361,14 +359,7 @@ export default {
         this.$store.state.tagsView.visitedViews[index].query = Object.assign({}, this.listQuery)
       }
       this.listLoading = false
-      if (this.isToday) {
-        this.listQuery.begin = moment().utcOffset(0).format('YYYY-MM-DD')
-        this.listQuery.end = moment().utcOffset(0).format('YYYY-MM-DD')
-      } else {
-        this.listQuery.begin = moment(this.dateRange[0]).format('YYYY-MM-DD')
-        this.listQuery.end = moment(this.dateRange[1]).format('YYYY-MM-DD')
-      }
-      this.chooseMetricsList = ['createTime','productName','picture','pid','level_1_category','level_2_category','orders','gmv','videos','video_views']
+      this.chooseMetricsList = ['date','product_name','product_id','level_1_category','level_2_category','orders','gmv','videos','video_views']
       let params = {pageFilterVo: this.listQuery, pageMetricsVo: this.chooseMetricsList, pageGroupVo: this.chooseGroupList, pageVO: {limit: this.limit, page: this.page, sortColumn: this.sortColumn, sortType: this.sortType}}
       fetchProductGmvList(params).then(response => {
         this.list = response.data.pageVO.list
@@ -425,25 +416,14 @@ export default {
     },
     // 修改筛选添加后重新加载列表数据
     handleFilter() {
-      this.listQuery.page = 1
-      this.chooseGroupList = ['pid']
+      this.chooseGroupList = ['product_id']
       this.getList()
     },
     handleFilterByDay(){
-      this.listQuery.page = 1
-      this.chooseGroupList = ['day','pid']
+      this.chooseGroupList = ['day','product_id']
       this.getList()
     },
-    // 页码修改后重新加载
-    handleSizeChange(val) {
-      this.listQuery.limit = val
-      this.getList()
-    },
-    // 页码修改后重新加载
-    handleCurrentChange(val) {
-      this.listQuery.page = val
-      this.getList()
-    },
+
     // 处理选择框改变时
     handleSelectionChange(val) {
       this.multipleSelection = val

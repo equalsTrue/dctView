@@ -45,9 +45,9 @@
           </el-option>
         </el-select>
 
-        <el-select v-model="listQuery.region" style="margin-left: 20px" multiple collapse-tags filterable clearable reserve-keyword placeholder="国家">
+        <el-select v-model="listQuery.country" style="margin-left: 20px" multiple collapse-tags filterable clearable reserve-keyword placeholder="国家">
           <el-option
-              v-for="item in regionList"
+              v-for="item in countryList"
               :key="item.value"
               :label="item.label"
               :value="item.value">
@@ -334,18 +334,18 @@
     </el-table>
 
     <!-- 页码 -->
-    <div class="pagination-container">
-      <el-pagination
-        background
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="listQuery.page"
-        :page-sizes="[10,20,30,50]"
-        :page-size="listQuery.limit"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="total">
-      </el-pagination>
-    </div>
+<!--    <div class="pagination-container">-->
+<!--      <el-pagination-->
+<!--        background-->
+<!--        @size-change="handleSizeChange"-->
+<!--        @current-change="handleCurrentChange"-->
+<!--        :current-page="listQuery.page"-->
+<!--        :page-sizes="[10,20,30,50]"-->
+<!--        :page-size="listQuery.limit"-->
+<!--        layout="total, sizes, prev, pager, next, jumper"-->
+<!--        :total="total">-->
+<!--      </el-pagination>-->
+<!--    </div>-->
 
 
 
@@ -402,13 +402,10 @@ export default {
       shopLogList: [],
       // 列表请求条件，既给接口传递的参数
       listQuery: {
-        page: 1,
-        limit: 10,
-        uid:[],
         creator:[],
+        country:[],
         status:[],
         user:[],
-        region:[],
         userGroup:[],
         time: [
           this.formatDateToday() + ' 00:00:00',
@@ -416,7 +413,6 @@ export default {
         ]
       },
       dialogFileVisible: false,
-      regionList:[],
       dialogLog: false,
       accountLogList:[],
       dateRange: [
@@ -596,14 +592,7 @@ export default {
         this.$store.state.tagsView.visitedViews[index].query = Object.assign({}, this.listQuery)
       }
       this.listLoading = false
-      if (this.isToday) {
-        this.listQuery.begin = moment().utcOffset(0).format('YYYY-MM-DD')
-        this.listQuery.end = moment().utcOffset(0).format('YYYY-MM-DD')
-      } else {
-        this.listQuery.begin = moment(this.dateRange[0]).format('YYYY-MM-DD')
-        this.listQuery.end = moment(this.dateRange[1]).format('YYYY-MM-DD')
-      }
-      this.chooseMetricsList = ['createTime','profilePicture','creator','belong_person','userGroup','country','gmv','videos','video_views','addVideos']
+      this.chooseMetricsList = ['date','creator','country','gmv','videos','video_views']
       let params = {pageFilterVo: this.listQuery, pageMetricsVo: this.chooseMetricsList, pageGroupVo: this.chooseGroupList, pageVO: {limit: this.limit, page: this.page, sortColumn: this.sortColumn, sortType: this.sortType}}
       fetchProductGmvList(params).then(response => {
         this.total = response.data.total
@@ -714,23 +703,11 @@ export default {
     },
     // 修改筛选添加后重新加载列表数据
     handleFilter() {
-      this.listQuery.page = 1
-      this.chooseGroupList = ['creator']
+      this.chooseGroupList = ['day','creator','country']
       this.getList()
     },
     handleFilterByDay(){
-      this.listQuery.page = 1
-      this.chooseGroupList = ['day','creator']
-      this.getList()
-    },
-    // 页码修改后重新加载
-    handleSizeChange(val) {
-      this.listQuery.limit = val
-      this.getList()
-    },
-    // 页码修改后重新加载
-    handleCurrentChange(val) {
-      this.listQuery.page = val
+      this.chooseGroupList = ['day','creator','country']
       this.getList()
     },
     // 处理选择框改变时
