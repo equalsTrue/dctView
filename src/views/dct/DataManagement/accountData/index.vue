@@ -106,7 +106,7 @@
         <el-button v-waves class="filter-item" style="margin-left: 1%;" type="primary" @click="submitUpload">上传到服务器
         </el-button>
 
-        <el-button   v-waves class="filter-item" type="danger" @click="downLoadDetailExcel"
+        <el-button   v-waves class="filter-item" type="danger" @click="handleDownload"
                     style="margin-left: 1%;background-color: purple">导出查询数据
         </el-button>
 
@@ -161,10 +161,10 @@
 
           </el-row>
 
-          <el-row>
+          <el-row :span="14">
 
             <el-col :span="4">
-              <el-form-item label-width="150px" prop="appName"
+              <el-form-item label-width="150px" prop="account"
                             label="请选择账号:">
                 <!--              <label style="font-size: 0.9em;color: #606266;margin-left: 40px">请选择上传平台：</label>-->
                 <el-select v-model="item.account" filterable clearable placeholder="account"
@@ -179,7 +179,24 @@
               </el-form-item>
             </el-col>
 
-            <el-col :span="4" style="margin-left: 190px">
+
+            <el-col :span="4" style="margin-left: 10%">
+              <el-form-item label-width="150px" prop="country"
+                            label="请选择国家:">
+                <!--              <label style="font-size: 0.9em;color: #606266;margin-left: 40px">请选择上传平台：</label>-->
+                <el-select v-model="item.country" filterable clearable placeholder="account"
+                           style="width: 155px">
+                  <el-option v-for="item in countryList"
+                             :key="item.label"
+                             :label="item.label"
+                             :value="item.value">
+                    <span style="float: left">{{ item.value }}</span>
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+
+            <el-col :span="6" style="margin-left: 10%">
               <el-form-item label-width="80px" prop="date"
                             label="报表日期:">
                 <!--              <label style="font-size: 0.9em;color: #606266;margin-left: 40px">请选择上传平台：</label>-->
@@ -228,6 +245,9 @@
       element-loading-text="拼命加载中"
       border
       fit
+      max-height="600px"
+      :summary-method="getSummaries"
+      show-summary
       highlight-current-row
       style="min-width: 100%"
       @selection-change="handleSelectionChange"
@@ -237,34 +257,29 @@
       <el-table-column type="selection" width=55>
       </el-table-column>
 
-      <el-table-column v-if="showId" :label="$t('table.identification')" width=200 align="center">
+      <el-table-column :min-width="calculateWidth" align="center" :label="$t('table.date')" sortable prop="date">
         <template slot-scope="scope">
-          <span class="link-type" >{{ scope.row.id }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column width=150px align="center" :label="$t('table.date')">
-        <template slot-scope="scope">
-          <span>{{ new Date(scope.row.createTime).getTime() | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+          <span>{{ scope.row.date}}</span>
         </template>
       </el-table-column>
 
-      <el-table-column min-width="20px" label="index">
+      <el-table-column :min-width="calculateWidth" label="排名" sortable prop="index" column-key="key">
         <template slot-scope="scope">
           <span>{{ scope.row.index }}</span>
         </template>
       </el-table-column>
 
 
-      <el-table-column min-width="30px" label="图片">
+      <el-table-column :min-width="calculateWidth" label="头像" prop="profile_picture" column-key="profile_picture">
         <template slot-scope="scope">
-          <img :src="scope.row.picture" height="50%" width="50%" >
+          <img :src="scope.row.profile_picture" height="50%" width="50%" >
         </template>
       </el-table-column>
 
 
-      <el-table-column min-width="20px" label="Handle" column-key="creator">
+      <el-table-column :min-width="calculateWidth" label="Handle" column-key="creator" prop="creator" >
         <template slot-scope="scope">
-          <span>{{ scope.row.creator }}</span>
+          <el-link type="primary">{{ scope.row.creator }}</el-link>
         </template>
       </el-table-column>
 
@@ -273,22 +288,22 @@
 
 
 
-      <el-table-column min-width="20px" label="归属人" >
+      <el-table-column :min-width="calculateWidth" label="归属人" prop="belong_person" column-key="belong_person">
         <template slot-scope="scope">
-          <span>{{ scope.row.user }}</span>
+          <span>{{ scope.row.belong_person }}</span>
 
         </template>
       </el-table-column>
 
 
-      <el-table-column min-width="30px" label="组别">
+      <el-table-column :min-width="calculateWidth" label="组别" prop="userGroup" column-key="userGroup">
         <template slot-scope="scope">
           <span>{{ scope.row.userGroup }}</span>
         </template>
       </el-table-column>
 
 
-      <el-table-column min-width="30px" label="国家">
+      <el-table-column :min-width="calculateWidth" label="国家" prop="country">
         <template slot-scope="scope">
           <span>{{ handleCountry(scope.row.country) }}</span>
         </template>
@@ -297,33 +312,39 @@
 
 
 
-      <el-table-column min-width="30px" label="GMV">
+      <el-table-column :min-width="calculateWidth" label="GMV" sortable prop="gmv">
         <template slot-scope="scope">
-          <span>{{ scope.row.gmv }}</span>
+          <span>{{ parseFloat(scope.row.gmv).toFixed(3) }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column min-width="30px" label="佣金">
+      <el-table-column :min-width="calculateWidth" label="Creator佣金" sortable prop="creator_commission" column-key="creator_commission">
         <template slot-scope="scope">
-          <span>{{ scope.row.commission }}</span>
+          <span>{{ parseFloat(scope.row.creator_commission).toFixed(3) }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column min-width="30px" label="视频数量" column-key="videos">
+      <el-table-column :min-width="calculateWidth" label="Partner佣金" sortable prop="partner_commission" column-key="partner_commission">
         <template slot-scope="scope">
-          <span>{{ scope.row.videos }}</span>
+          <span>{{ parseFloat(scope.row.partner_commission).toFixed(3) }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column :min-width="calculateWidth" label="视频数量" column-key="videos" sortable prop="videos">
+        <template slot-scope="scope">
+          <el-link type="primary">{{ scope.row.videos }}</el-link>
         </template>
       </el-table-column>
 
 
-      <el-table-column min-width="30px" label="总播放量">
+      <el-table-column :min-width="calculateWidth" sortable label="总播放量" prop="video_views" column-key="video_views">
         <template slot-scope="scope">
           <span>{{ scope.row.video_views }}</span>
         </template>
       </el-table-column>
 
 
-      <el-table-column min-width="30px" label="新增视频数量">
+      <el-table-column :min-width="calculateWidth" label="新增视频数量" sortable prop="addVideos" column-key="addViews">
         <template slot-scope="scope">
           <span>{{ scope.row.addVideos }}</span>
         </template>
@@ -370,6 +391,7 @@ const defaultSubmit = {
   vidFile: null,
   gmvFile: null,
   pidFile: null,
+  country: '',
   creatorFile: null
 }
 export default {
@@ -499,9 +521,10 @@ export default {
   },
   filters: {},
   created() {
-    // if (this.$route.query && Object.getOwnPropertyNames(this.$route.query).length > 1) {
-    //   this.listQuery = this.$route.query
-    // }
+    if (this.$route.query && Object.getOwnPropertyNames(this.$route.query).length > 1) {
+      this.listQuery = this.$route.query
+      this.list = this.$route.list
+    }
     this.initSelector()
     this.getList()
   },
@@ -592,14 +615,72 @@ export default {
         this.$store.state.tagsView.visitedViews[index].query = Object.assign({}, this.listQuery)
       }
       this.listLoading = false
-      this.chooseMetricsList = ['date','creator','country','gmv','videos','video_views']
+      this.chooseMetricsList = ['creator','country','gmv','videos','video_views','creator_commission','partner_commission']
+      if(this.chooseGroupList.indexOf("day") >= 0){
+        this.chooseMetricsList.push("date")
+      }
       let params = {pageFilterVo: this.listQuery, pageMetricsVo: this.chooseMetricsList, pageGroupVo: this.chooseGroupList, pageVO: {limit: this.limit, page: this.page, sortColumn: this.sortColumn, sortType: this.sortType}}
       fetchProductGmvList(params).then(response => {
-        this.total = response.data.total
         this.listLoading = false
-        this.list = response.data.list
+        this.list = response.data.pageVO.list
       }).catch(() => {
       })
+    },
+
+    getSummaries(param) {
+      debugger
+      const {columns, data} = param
+      const sums = []
+      if (!data || data.length === 0) {
+        return sums
+      }
+      const dataProperties = Object.getOwnPropertyNames(data[0])
+      const sumsModel = {}
+      dataProperties.forEach((property, index) => {
+        if (property == 'date' || property == 'creator' || property == 'belong_person'
+            || property == 'userGroup' || property == 'index' || property ==  'profile_picture' || property == 'country' || property == 'belong_pserson') {
+          return '———'
+        }
+        // 字符转为数据
+        const values = data.map(item => Number(item[property]))
+        // 遍历数据
+        if (!values.every(value => isNaN(value))) {
+          sumsModel[property] = values.reduce((prev, curr) => {
+            const value = Number(curr)
+            if (!isNaN(value)) {
+              return prev + curr
+            } else {
+              return prev
+            }
+          }, 0)
+        } else {
+          sumsModel[property] = '——'
+        }
+      })
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          sums[index] = '合计'
+          return
+        }
+        if(column.property == 'date' || column.property == 'index' || column.property == 'creator'
+            || column.property == 'user' || column.property == 'userGroup' || column.property == 'profile_picture'){
+          sums[index] == '--'
+          return;
+        }
+        if (dataProperties.indexOf(column.property) >= 0 && (column.property == 'gmv' ||column.property == 'commission' || column.property == 'order_commission' || column.property == 'partner_commission')){
+          sums[index] = parseFloat(sumsModel[column.property]).toFixed(2)
+        }else {
+          sums[index] = sumsModel[column.property]
+        }
+      })
+      this.summaryInfo = []
+      this.summaryInfo = sums
+      return sums
+    },
+
+    calculateWidth(){
+      let width = parseFloat(100/10).toFixed(2) + "%"
+      return width
     },
 
     formatDateToday() {
@@ -657,11 +738,15 @@ export default {
       return str
     },
     handleCellDoubleClick(row, column, cell, event) {
+      let time = row.date
+      if(time == 'total'){
+        time = this.listQuery.time[0] + ',' + this.listQuery.time[1]
+      }
       if(column.columnKey === 'creator'){
-        this.$router.push({path: '/dct/DataManagement/accountData/creatorIndex?creator=' + row.creator})
+        this.$router.push({path: '/dct/DataManagement/accountData/creatorIndex?creator=' + row.creator + '&time=' + time})
       }
       if(column.columnKey=== 'videos') {
-        this.$router.push({path: '/dct/DataManagement/accountData/videoIndex?pid=' + row.pid})
+        this.$router.push({path: '/dct/DataManagement/accountData/videoIndex?creator=' + row.creator + '&time='+ time})
       }
     },
     checkInOperator(operator){
@@ -683,6 +768,7 @@ export default {
         formData.append('pidFile', this.submitList[i].pidFile == null ? fn : this.submitList[i].pidFile)
         formData.append('creatorFile', this.submitList[i].creatorFile == null ? fn : this.submitList[i].creatorFile)
         formData.append("account", list[i].account);
+        formData.append("country", list[i].country);
         formData.append("times", list[i].time);
       }
       let url = this.uploadUrl()
@@ -703,7 +789,7 @@ export default {
     },
     // 修改筛选添加后重新加载列表数据
     handleFilter() {
-      this.chooseGroupList = ['day','creator','country']
+      this.chooseGroupList = ['creator','country']
       this.getList()
     },
     handleFilterByDay(){
@@ -729,31 +815,31 @@ export default {
       this.downloadLoading = true
       import('@/vendor/Export2Excel').then(excel => {
         // 设置导出列
-        const filterVal = ['createTime', 'creator', 'uid', 'belongPerson', 'userGroup', 'country', 'status', 'deliverTime','closeTime']
+        const filterVal = ['date','index','profile_picture','creator','belong_person', 'userGroup', 'country', 'gmv', 'creator_commission','partner_commission','videos','video_views','addViews']
         // 设置对应数据
-        const tHeader = ['时间', 'Handle', 'UID', '归属人', '组别', '国家', '状态', '交付日期','封号日期']
-        const filterList = []
+        const tHeader = ['时间','排名','头像','Handle','归属人', '组别', '国家', 'GMV', 'creator佣金','partner佣金','视频数量','视频总播放量','新增视频数量']
+        var list = []
         this.list.forEach((item, index) => {
-          filterList.push(item)
+          list.push(item)
         })
-        const data = this.formatJson(filterVal, filterList)
+        var sumInfo = new Object();
+        filterVal.forEach((itemInfo, index) => {
+          sumInfo[itemInfo] = this.summaryInfo[index]
+        })
+        list.push(sumInfo)
+        const data = this.formatJson(filterVal, list)
         excel.export_json_to_excel({
           header: tHeader,
           data,
-          filename: '账号报表'
+          filename: '账号数据报表'
         })
         this.downloadLoading = false
       })
     },
     formatJson(filterVal, jsonData) {
       return jsonData.map(v => filterVal.map(j => {
-        debugger
-        if (j === 'createTime' || j === 'deliverTime' || j === 'closeTime') {
-          if(v[j] != null){
-            return parseTime(v[j])
-          }
-        } else if(j === 'status'){
-          return this.handleStatus(v[j])
+        if(j.indexOf("country") > 0){
+          return this.handleCountry(v[j])
         }else {
           return v[j]
         }

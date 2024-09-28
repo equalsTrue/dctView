@@ -146,17 +146,18 @@ export function fetchProductGmvList(params){
     })
 }
 
-export function fetchPidGmvParams(){
+export function fetchPidGmvParams(params){
     return request({
-        url: '/dct/gmv/pid/list/params',
-        method: 'get'
+        url: '/dct/gmv/pid/list/params?creator=' + params,
+        method: 'get',
     })
 }
 
-export function fetchPidVideoList(pid,creator){
+export function fetchVideoList(params){
     return request({
-        url: '/dct/gmv/video?pid=' + pid + '&creator=' + creator,
-        method: 'get'
+        url: '/dct/gmv/video',
+        method: 'post',
+        data: params
     })
 }
 

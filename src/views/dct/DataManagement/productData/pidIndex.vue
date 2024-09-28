@@ -45,9 +45,9 @@
           </el-option>
         </el-select>
 
-        <el-select v-model="listQuery.region" style="margin-left: 20px" multiple collapse-tags filterable clearable reserve-keyword placeholder="国家">
+        <el-select v-model="listQuery.country" style="margin-left: 20px" multiple collapse-tags filterable clearable reserve-keyword placeholder="国家">
           <el-option
-              v-for="item in regionList"
+              v-for="item in countryList"
               :key="item.value"
               :label="item.label"
               :value="item.value">
@@ -94,6 +94,10 @@
                    @click="handleFilter">{{ $t('table.search') }}
         </el-button>
         <el-button v-else class="filter-item" type="primary" icon="el-icon-loading">Loading</el-button>
+
+        <el-button   v-waves class="filter-item" type="danger" @click="handleDownload"
+                     style="margin-left: 1%;background-color: purple">导出查询数据
+        </el-button>
         <!-- 添加按钮 -->
 
       </el-row>
@@ -109,6 +113,9 @@
       element-loading-text="拼命加载中"
       border
       fit
+      max-height="600px"
+      :summary-method="getSummaries"
+      show-summary
       highlight-current-row
       style="min-width: 100%"
       @selection-change="handleSelectionChange"
@@ -118,32 +125,28 @@
       <el-table-column type="selection" width=55>
       </el-table-column>
 
-      <el-table-column v-if="showId" :label="$t('table.identification')" width=200 align="center">
-        <template slot-scope="scope">
-          <span class="link-type" >{{ scope.row.id }}</span>
-        </template>
-      </el-table-column>
+
       <el-table-column width=150px align="center" :label="$t('table.date')">
         <template slot-scope="scope">
-          <span>{{ new Date(scope.row.createTime).getTime() | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+          <span>{{ scope.row.date }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column min-width="20px" label="index">
+      <el-table-column :min-width="calculateWidth" label="排名" sortable>
         <template slot-scope="scope">
           <span>{{ scope.row.index }}</span>
         </template>
       </el-table-column>
 
 
-      <el-table-column min-width="30px" label="头像">
+      <el-table-column :min-width="calculateWidth" label="头像">
         <template slot-scope="scope">
-          <img :src="scope.row.profilePicture" height="50%" width="50%" >
+          <img :src="scope.row.profile_picture" height="50%" width="50%" >
         </template>
       </el-table-column>
 
 
-      <el-table-column min-width="20px" label="Handle" column-key="creator">
+      <el-table-column :min-width="calculateWidth" label="Handle" column-key="creator">
         <template slot-scope="scope">
           <span>{{ scope.row.creator }}</span>
         </template>
@@ -154,7 +157,7 @@
 
 
 
-      <el-table-column min-width="20px" label="归属人" >
+      <el-table-column :min-width="calculateWidth" label="归属人" >
         <template slot-scope="scope">
           <span>{{ scope.row.user }}</span>
 
@@ -162,14 +165,14 @@
       </el-table-column>
 
 
-      <el-table-column min-width="30px" label="组别">
+      <el-table-column :min-width="calculateWidth" label="组别">
         <template slot-scope="scope">
           <span>{{ scope.row.userGroup }}</span>
         </template>
       </el-table-column>
 
 
-      <el-table-column min-width="30px" label="国家">
+      <el-table-column :min-width="calculateWidth" label="国家">
         <template slot-scope="scope">
           <span>{{ handleCountry(scope.row.country) }}</span>
         </template>
@@ -178,56 +181,49 @@
 
 
 
-      <el-table-column min-width="30px" label="GMV">
+      <el-table-column :min-width="calculateWidth" label="GMV" sortable column-key="gmv" pro="gmv">
         <template slot-scope="scope">
           <span>{{ scope.row.gmv }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column min-width="30px" label="佣金">
+      <el-table-column :min-width="calculateWidth" label="Creator佣金" sortable column-key="creator_commission" prop="creator_commission">
         <template slot-scope="scope">
-          <span>{{ scope.row.commission }}</span>
+          <span>{{ scope.row.creator_commission }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column min-width="30px" label="视频数量" column-key="videos">
+      <el-table-column :min-width="calculateWidth" label="Partner佣金" sortable column-key="partner_commission" prop="partner_commission">
         <template slot-scope="scope">
-          <span>{{ scope.row.videos }}</span>
+          <span>{{ scope.row.partner_commission }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column :min-width="calculateWidth" label="视频数量" column-key="videos" sortable pro="videos">
+        <template slot-scope="scope">
+          <el-link type="primary">{{ scope.row.videos }}</el-link>
         </template>
       </el-table-column>
 
 
-      <el-table-column min-width="30px" label="总播放量">
+      <el-table-column :min-width="calculateWidth" label="总播放量" sortable column-key="video_views" prop="video_views">
         <template slot-scope="scope">
           <span>{{ scope.row.video_views }}</span>
         </template>
       </el-table-column>
 
 
-      <el-table-column min-width="30px" label="新增视频数量">
-        <template slot-scope="scope">
-          <span>{{ scope.row.addVideos }}</span>
-        </template>
-      </el-table-column>
+<!--      <el-table-column min-width="30px" label="新增视频数量">-->
+<!--        <template slot-scope="scope">-->
+<!--          <span>{{ scope.row.addVideos }}</span>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
 
 
 
     </el-table>
 
     <!-- 页码 -->
-    <div class="pagination-container">
-      <el-pagination
-        background
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="listQuery.page"
-        :page-sizes="[10,20,30,50]"
-        :page-size="listQuery.limit"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="total">
-      </el-pagination>
-    </div>
-
 
 
   </div>
@@ -236,7 +232,7 @@
 
 <script>
 // 数据接口
-import {fetchPerPidList, fetchPidGmvParams} from '@/api/dct'
+import {fetchPerPidList, fetchCreatorGmvParams} from '@/api/dct'
 // 按钮动画特效 - 水波纹指令
 import waves from '@/directive/waves'
 import {parseTime} from '@/utils'
@@ -245,7 +241,7 @@ import clip from '@/utils/clipboard'
 import moment from 'moment'
 
 export default {
-  name: 'Account',
+  name: 'pidIndex',
   directives: {
     waves
   },
@@ -272,18 +268,13 @@ export default {
       shopLogList: [],
       // 列表请求条件，既给接口传递的参数
       listQuery: {
-        page: 1,
-        limit: 10,
-        uid:[],
         creator:[],
+        product_id:[],
         status:[],
+        country:[],
         user:[],
-        region:[],
         userGroup:[],
-        time: [
-          this.formatDateToday() + ' 00:00:00',
-          this.formatDateToday() + ' 23:59:59'
-        ]
+        time: []
       },
       regionList:[],
       dialogLog: false,
@@ -330,6 +321,7 @@ export default {
         {label: '封号', value: 1},
         {label: '弃用', value: 2}
       ],
+      rotueTime:'',
       groupList:[],
       // 列表头部的筛选条件
       userList:[],
@@ -349,6 +341,10 @@ export default {
     pid: {
       type: String,
       default: undefined
+    },
+    time: {
+      type: String,
+      default: undefined
     }
   },
   filters: {},
@@ -356,6 +352,14 @@ export default {
     // if (this.$route.query && Object.getOwnPropertyNames(this.$route.query).length > 1) {
     //   this.listQuery = this.$route.query
     // }
+    this.pid = this.$route.query.pid
+    this.rotueTime = this.$route.query.time
+    if(this.rotueTime.indexOf(",") >= 0) {
+      this.listQuery.time.push(this.rotueTime.split(",")[0])
+      this.listQuery.time.push(this.rotueTime.split(",")[1])
+    }else {
+      this.time = this.$route.query.time
+    }
     this.initSelector()
     this.getList()
   },
@@ -363,10 +367,9 @@ export default {
     // 初始化选择框
     initSelector() {
       // 获取参数
-      fetchPidGmvParams().then(response => {
+      fetchCreatorGmvParams().then(response => {
         this.creatorList = response.data.creator
-        this.userList = response.data.belongPerson
-        this.regionList = response.data.region
+        this.userList = response.data.user
         this.userGroupList = response.data.userGroup
       }).catch(err => {
         console.log(err)
@@ -386,20 +389,14 @@ export default {
         const index = this.$store.state.tagsView.active
         this.$store.state.tagsView.visitedViews[index].query = Object.assign({}, this.listQuery)
       }
-      this.listLoading = true
-      if (this.isToday) {
-        this.listQuery.begin = moment().utcOffset(0).format('YYYY-MM-DD')
-        this.listQuery.end = moment().utcOffset(0).format('YYYY-MM-DD')
-      } else {
-        this.listQuery.begin = moment(this.dateRange[0]).format('YYYY-MM-DD')
-        this.listQuery.end = moment(this.dateRange[1]).format('YYYY-MM-DD')
-      }
-      this.chooseMetricsList = ['createTime','productName','picture','pid','level_1_category','level_2_category','orders','gmv','videos','video_views']
+      this.listLoading = false
+      this.listQuery.product_id = [this.pid]
+      this.chooseMetricsList = ['date','creator','level_1_category','level_2_category','orders','gmv','videos','video_views','country','creator_commission','partner_commission']
+      this.chooseGroupList = ['creator','day','level_1_category','level_2_category','country']
       let params = {pageFilterVo: this.listQuery, pageMetricsVo: this.chooseMetricsList, pageGroupVo: this.chooseGroupList, pageVO: {limit: this.limit, page: this.page, sortColumn: this.sortColumn, sortType: this.sortType}}
       fetchPerPidList(params).then(response => {
-        this.total = response.data.total
         this.listLoading = false
-        this.list = response.data.list
+        this.list = response.data.pageVO.list
       }).catch(() => {
       })
     },
@@ -451,7 +448,7 @@ export default {
     },
     handleCellDoubleClick(row, column, cell, event) {
       if(column.columnKey=== 'videos') {
-        this.$router.push({path: '/dct/DataManagement/productData/videoIndex?pid=' + row.pid  + '&creator=' + row.creator})
+        this.$router.push({path: '/dct/DataManagement/productData/videoIndex?pid=' + this.pid  + '&creator=' + row.creator + '&time=' + this.listQuery.time[0] + "," + this.listQuery.time[1]})
       }
     },
     checkInOperator(operator){
@@ -463,55 +460,97 @@ export default {
     },
     // 修改筛选添加后重新加载列表数据
     handleFilter() {
-      this.listQuery.page = 1
       this.getList()
     },
-    // 页码修改后重新加载
-    handleSizeChange(val) {
-      this.listQuery.limit = val
-      this.getList()
-    },
-    // 页码修改后重新加载
-    handleCurrentChange(val) {
-      this.listQuery.page = val
-      this.getList()
-    },
+
     // 处理选择框改变时
     handleSelectionChange(val) {
       this.multipleSelection = val
     },
     // 前往添加页面
 
+    getSummaries(param) {
+      debugger
+      const {columns, data} = param
+      const sums = []
+      if (!data || data.length === 0) {
+        return sums
+      }
+      const dataProperties = Object.getOwnPropertyNames(data[0])
+      const sumsModel = {}
+      dataProperties.forEach((property, index) => {
+        if (property == 'date' || property == 'creator' || property == 'belong_person'
+            || property == 'userGroup' || property == 'index' || property ==  'profile_picture' || property == 'country' || property == 'belong_pserson') {
+          return '———'
+        }
+        // 字符转为数据
+        const values = data.map(item => Number(item[property]))
+        // 遍历数据
+        if (!values.every(value => isNaN(value))) {
+          sumsModel[property] = values.reduce((prev, curr) => {
+            const value = Number(curr)
+            if (!isNaN(value)) {
+              return prev + curr
+            } else {
+              return prev
+            }
+          }, 0)
+        } else {
+          sumsModel[property] = '——'
+        }
+      })
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          sums[index] = '合计'
+          return
+        }
+        if(column.property == 'date' || column.property == 'index' || column.property == 'product_id'
+            || column.property == 'level_1_category' || column.property == 'level_2_category' || column.property == 'picture'){
+          sums[index] == '--'
+          return;
+        }
+        if (dataProperties.indexOf(column.property) >= 0 && (column.property == 'gmv' ||column.property == 'commission' || column.property == 'order_commission' || column.property == 'partner_commission')){
+          sums[index] = parseFloat(sumsModel[column.property]).toFixed(2)
+        }else {
+          sums[index] = sumsModel[column.property]
+        }
+
+      })
+      this.summaryInfo = []
+      this.summaryInfo = sums
+      return sums
+    },
+
 
     handleDownload() {
       this.downloadLoading = true
       import('@/vendor/Export2Excel').then(excel => {
         // 设置导出列
-        const filterVal = ['createTime', 'creator', 'uid', 'belongPerson', 'userGroup', 'country', 'status', 'deliverTime','closeTime']
+        const filterVal = ['date','index','profile_picture','creator','belong_person', 'userGroup', 'country', 'gmv', 'creator_commission','partner_commission','videos','video_views']
         // 设置对应数据
-        const tHeader = ['时间', 'Handle', 'UID', '归属人', '组别', '国家', '状态', '交付日期','封号日期']
-        const filterList = []
+        const tHeader = ['时间','排名','头像','Handle','归属人', '组别', '国家', 'GMV', 'creator佣金','partner佣金','视频数量','视频总播放量']
+        var list = []
         this.list.forEach((item, index) => {
-          filterList.push(item)
+          list.push(item)
         })
-        const data = this.formatJson(filterVal, filterList)
+        var sumInfo = new Object();
+        filterVal.forEach((itemInfo, index) => {
+          sumInfo[itemInfo] = this.summaryInfo[index]
+        })
+        list.push(sumInfo)
+        const data = this.formatJson(filterVal, list)
         excel.export_json_to_excel({
           header: tHeader,
           data,
-          filename: '账号报表'
+          filename: '单个产品数据报表'
         })
         this.downloadLoading = false
       })
     },
     formatJson(filterVal, jsonData) {
       return jsonData.map(v => filterVal.map(j => {
-        debugger
-        if (j === 'createTime' || j === 'deliverTime' || j === 'closeTime') {
-          if(v[j] != null){
-            return parseTime(v[j])
-          }
-        } else if(j === 'status'){
-          return this.handleStatus(v[j])
+        if(j.indexOf("country") > 0){
+          return this.handleCountry(v[j])
         }else {
           return v[j]
         }
