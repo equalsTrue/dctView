@@ -5,10 +5,27 @@
 
       <el-row style="margin-top: 20px">
         <!-- 搜索按钮 -->
-        <label style="font-size: 0.9em;color: #606266;margin-left: 40px">请选择日期：</label>
+        <label style="font-size: 0.9em;color: #606266;margin-left: 40px">GMV日期：</label>
         <el-date-picker
             style="margin-left: 5px"
             v-model="listQuery.time"
+            type="datetimerange"
+            align="right"
+            unlink-panels
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            :default-time="['00:00:00', '23:59:59']"
+            :picker-options="pickerOptions"
+        >
+        </el-date-picker>
+
+
+        <label style="font-size: 0.9em;color: #606266;margin-left: 40px"> 视频上传日期：</label>
+        <el-date-picker
+            style="margin-left: 5px"
+            v-model="listQuery.postTime"
             type="datetimerange"
             align="right"
             unlink-panels
@@ -136,6 +153,10 @@ export default {
     time: {
       type: String,
       default: undefined
+    },
+    postTime: {
+      type: String,
+      default: undefined
     }
   },
   data() {
@@ -163,7 +184,8 @@ export default {
       listQuery: {
         pid:'',
         creator:'',
-        time: []
+        time: [],
+        postTime:[],
       },
       regionList:[],
       dialogLog: false,
@@ -203,6 +225,7 @@ export default {
         }]
       },
       rotueTime: '',
+      rotuePostTime: '',
       // 选项框加载状态
       loading: false,
       // 列表头部的筛选条件
@@ -227,9 +250,14 @@ export default {
     this.creator = this.$route.query.creator
     this.pid = this.$route.query.pid
     this.rotueTime = this.$route.query.time
-    if(this.rotueTime.indexOf(",") >= 0) {
+    this.rotuePostTime = this.$route.query.postTime
+    if(this.rotueTime != undefined && this.rotueTime.indexOf(",") >= 0) {
       this.listQuery.time.push(this.rotueTime.split(",")[0])
       this.listQuery.time.push(this.rotueTime.split(",")[1])
+    }
+    if(this.rotuePostTime != undefined && this.rotuePostTime.indexOf(",") >= 0) {
+      this.listQuery.postTime.push(this.rotuePostTime.split(",")[0])
+      this.listQuery.postTime.push(this.rotuePostTime.split(",")[1])
     }
     if (this.$route.query && Object.getOwnPropertyNames(this.$route.query).length > 1) {
       this.listQuery = this.$route.query
@@ -255,11 +283,18 @@ export default {
       debugger
       this.listQuery.pid = this.pid
       this.listQuery.creator = this.creator
-      if(this.listQuery.time.indexOf(",") > 0){
+      if(this.listQuery.time !== undefined && this.listQuery.time.length > 0 && this.listQuery.time.indexOf(",") > 0){
         let  queryTime = this.listQuery.time
         this.listQuery.time = []
         this.listQuery.time.push(queryTime.split(",")[0])
         this.listQuery.time.push(queryTime.split(",")[1])
+      }
+
+      if(this.listQuery.postTime !== undefined && this.listQuery.postTime.length > 0 && this.listQuery.postTime.indexOf(",") > 0){
+        let  queryTime = this.listQuery.postTime
+        this.listQuery.postTime = []
+        this.listQuery.postTime.push(queryTime.split(",")[0])
+        this.listQuery.postTime.push(queryTime.split(",")[1])
       }
       fetchVideoList(this.listQuery).then(response => {
         debugger
@@ -313,7 +348,7 @@ export default {
       const dataProperties = Object.getOwnPropertyNames(data[0])
       const sumsModel = {}
       dataProperties.forEach((property, index) => {
-        if (property == 'date' || property == 'creator' || property == 'vid' || property == 'index' || property ==  'url')  {
+        if (property == 'creator' || property == 'vid' || property == 'index' || property ==  'url')  {
           return '———'
         }
         // 字符转为数据
@@ -340,11 +375,11 @@ export default {
         if(column.property == 'index' || column.property == 'vid' || column.property == 'url'){
           sums[index] == '--'
         }
-        if(column.property == 'date') {
-          sums[index] == this.list.length
-        }
-        if (dataProperties.indexOf(column.property) >= 0 && (column.property == 'gmv' ||column.property == 'commission')){
+        debugger
+        if (dataProperties.indexOf(column.property) >= 0 && (column.property == 'gmv' ||column.property == 'commission' || column.property == 'order_commission' || column.property == 'partner_commission')){
           sums[index] = parseFloat(sumsModel[column.property]).toFixed(2)
+        } else if(column.property == 'date') {
+          sums[index] = this.list.length
         }else {
           sums[index] = sumsModel[column.property]
         }

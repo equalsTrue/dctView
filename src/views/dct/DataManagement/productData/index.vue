@@ -4,6 +4,7 @@
     <div class="filter-container">
       <el-row>
 
+
         <el-select v-model="listQuery.product_id" style="margin-left: 20px" multiple collapse-tags  filterable clearable reserve-keyword placeholder="Handle">
           <el-option
               v-for="item in pidList"
@@ -131,7 +132,7 @@
           <span class="link-type" >{{ scope.row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column :min-width="calculateWidth" align="center" :label="$t('table.date')">
+      <el-table-column :min-width="calculateWidth" align="center" :label="$t('table.date')" prop="date">
         <template slot-scope="scope">
           <span>{{ scope.row.date }}</span>
         </template>
@@ -196,9 +197,15 @@
       </el-table-column>
 
 
-      <el-table-column :min-width="calculateWidth" label="视频数量" column-key="videos" sortable prop="videos">
+      <el-table-column :min-width="calculateWidth" label="活跃视频" column-key="videos" sortable prop="videos">
         <template slot-scope="scope">
           <el-link type="primary">{{ scope.row.videos }}</el-link>
+        </template>
+      </el-table-column>
+
+      <el-table-column :min-width="calculateWidth" label="新增视频" sortable prop="addVideos" column-key="addVideos">
+        <template slot-scope="scope">
+          <el-link type="primary">{{ scope.row.addVideos }}</el-link>
         </template>
       </el-table-column>
 
@@ -274,10 +281,12 @@ export default {
       level_1_categoryList:[],
       level_2_categoryList:[],
       cidList:[],
+      accountList:['starp','vista'],
       chooseMetricsList:[],
       chooseGroupList:[],
       // 列表请求条件，既给接口传递的参数
       listQuery: {
+        account:[],
         level_1_category:[],
         level_2_category:[],
         product_id:[],
@@ -422,6 +431,9 @@ export default {
       if(column.columnKey=== 'videos') {
         this.$router.push({path: '/dct/DataManagement/productData/videoIndex?pid=' + row.product_id + '&time='+ time})
       }
+      if(column.columnKey=== 'addVideos') {
+        this.$router.push({path: '/dct/DataManagement/productData/videoIndex?pid=' + row.product_id + '&postTime='+ time})
+      }
     },
     checkInOperator(operator){
       if(this.operator.indexOf(operator) > -1 || this.operator.indexOf('all') > -1){
@@ -478,13 +490,15 @@ export default {
           sums[index] = '合计'
           return
         }
-        if(column.property == 'date' || column.property == 'index' || column.property == 'product_id'
+        if(column.property == 'index' || column.property == 'product_id'
             || column.property == 'product_name' || column.property == 'picture' || column.property == 'level_1_category' || column.property == 'level_2_category'){
           sums[index] == '--'
           return;
         }
         if (dataProperties.indexOf(column.property) >= 0 && (column.property == 'gmv' ||column.property == 'commission' || column.property == 'creator_commission' || column.property == 'partner_commission')){
           sums[index] = parseFloat(sumsModel[column.property]).toFixed(2)
+        }else if(column.property == 'date') {
+          sums[index] = this.list.length
         }else {
           sums[index] = sumsModel[column.property]
         }

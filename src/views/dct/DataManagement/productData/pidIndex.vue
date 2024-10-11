@@ -126,7 +126,7 @@
       </el-table-column>
 
 
-      <el-table-column width=150px align="center" :label="$t('table.date')">
+      <el-table-column width=150px align="center" :label="$t('table.date')" prop="date">
         <template slot-scope="scope">
           <span>{{ scope.row.date }}</span>
         </template>
@@ -199,13 +199,13 @@
         </template>
       </el-table-column>
 
-      <el-table-column :min-width="calculateWidth" label="活跃视频数" column-key="videos" sortable pro="videos">
+      <el-table-column :min-width="calculateWidth" label="活跃视频" column-key="videos" sortable pro="videos">
         <template slot-scope="scope">
           <el-link type="primary">{{ scope.row.videos }}</el-link>
         </template>
       </el-table-column>
 
-      <el-table-column :min-width="calculateWidth" label="新增视频数" column-key="addVideos" sortable pro="videos">
+      <el-table-column :min-width="calculateWidth" label="新增视频" column-key="addVideos" sortable pro="addVideos">
         <template slot-scope="scope">
           <el-link type="primary">{{ scope.row.addVideos }}</el-link>
         </template>
@@ -456,6 +456,9 @@ export default {
       if(column.columnKey=== 'videos') {
         this.$router.push({path: '/dct/DataManagement/productData/videoIndex?pid=' + this.pid  + '&creator=' + row.creator + '&time=' + this.listQuery.time[0] + "," + this.listQuery.time[1]})
       }
+      if(column.columnKey=== 'addVideos') {
+        this.$router.push({path: '/dct/DataManagement/productData/videoIndex?pid=' + this.pid  + '&creator=' + row.creator + '&postTime=' + this.listQuery.time[0] + "," + this.listQuery.time[1]})
+      }
     },
     checkInOperator(operator){
       if(this.operator.indexOf(operator) > -1 || this.operator.indexOf('all') > -1){
@@ -510,13 +513,15 @@ export default {
           sums[index] = '合计'
           return
         }
-        if(column.property == 'date' || column.property == 'index' || column.property == 'product_id'
+        if(column.property == 'index' || column.property == 'product_id'
             || column.property == 'level_1_category' || column.property == 'level_2_category' || column.property == 'picture'){
           sums[index] == '--'
           return;
         }
         if (dataProperties.indexOf(column.property) >= 0 && (column.property == 'gmv' ||column.property == 'commission' || column.property == 'order_commission' || column.property == 'partner_commission')){
           sums[index] = parseFloat(sumsModel[column.property]).toFixed(2)
+        }else if(column.property == 'date'){
+          sums[index] = this.list.length
         }else {
           sums[index] = sumsModel[column.property]
         }

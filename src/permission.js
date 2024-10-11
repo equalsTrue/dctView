@@ -37,7 +37,7 @@ NProgress.configure({showSpinner: false})// NProgress Configuration
 
 const whiteList = ['/login', '/workWeChatLogin', '/version', '/401', '/404'] // 免登录白名单
 
-const cachePathList = ['index','creatorIndex','videoIndex','pidIndex']
+const cachePathList = ['index','creatorIndex','pidIndex']
 
 function initRouterChild(childList, parent) {
   const children = []

@@ -4,6 +4,20 @@
     <div class="filter-container">
       <el-row>
 
+
+        <el-select v-model="listQuery.account" style="margin-left: 20px" multiple collapse-tags  filterable clearable reserve-keyword placeholder="账号">
+          <el-option
+              v-for="item in accountList"
+              :key="item"
+              :label="item"
+              :value="item">
+            <span style="float: left">{{ item }}</span>
+            <span v-if="item !== item" style="float: right; color: #8492a6; font-size: 13px">{{
+                item.value
+              }}</span>
+          </el-option>
+        </el-select>
+
         <el-select v-model="listQuery.creator" style="margin-left: 20px" multiple collapse-tags  filterable clearable reserve-keyword placeholder="Handle">
           <el-option
               v-for="item in creatorList"
@@ -146,20 +160,6 @@
 
           </el-row>
 
-          <el-row>
-            <el-col :span="4" style="margin-left: 1%">
-              <el-form-item label="选择PID文件:" label-width="150px">
-                <input type="file" id="fileId" ref="fileId" title @change="upLoadPidFile($event,index)"/>
-              </el-form-item>
-            </el-col>
-
-            <el-col :span="4" style="margin-left: 200px">
-              <el-form-item label="选择Creator文件:" label-width="150px">
-                <input type="file" id="fileId" ref="fileId" title @change="upLoadCreatorFile($event,index)"/>
-              </el-form-item>
-            </el-col>
-
-          </el-row>
 
           <el-row :span="14">
 
@@ -330,9 +330,15 @@
         </template>
       </el-table-column>
 
-      <el-table-column :min-width="calculateWidth" label="视频数量" column-key="videos" sortable prop="videos">
+      <el-table-column :min-width="calculateWidth" label="活跃视频" column-key="videos" sortable prop="videos">
         <template slot-scope="scope">
           <el-link type="primary">{{ scope.row.videos }}</el-link>
+        </template>
+      </el-table-column>
+
+      <el-table-column :min-width="calculateWidth" label="新增视频" sortable prop="addVideos" column-key="addVideos">
+        <template slot-scope="scope">
+          <el-link type="primary">{{ scope.row.addVideos }}</el-link>
         </template>
       </el-table-column>
 
@@ -344,11 +350,7 @@
       </el-table-column>
 
 
-      <el-table-column :min-width="calculateWidth" label="新增视频数量" sortable prop="addVideos" column-key="addViews">
-        <template slot-scope="scope">
-          <span>{{ scope.row.addVideos }}</span>
-        </template>
-      </el-table-column>
+
 
 
 
@@ -424,6 +426,7 @@ export default {
       shopLogList: [],
       // 列表请求条件，既给接口传递的参数
       listQuery: {
+        account:[],
         creator:[],
         country:[],
         status:[],
@@ -663,14 +666,16 @@ export default {
           sums[index] = '合计'
           return
         }
-        if(column.property == 'date' || column.property == 'index' || column.property == 'creator'
+        if(column.property == 'index' || column.property == 'creator'
             || column.property == 'user' || column.property == 'userGroup' || column.property == 'profile_picture'){
           sums[index] == '--'
           return;
         }
         if (dataProperties.indexOf(column.property) >= 0 && (column.property == 'gmv' ||column.property == 'commission' || column.property == 'creator_commission' || column.property == 'partner_commission')){
           sums[index] = parseFloat(sumsModel[column.property]).toFixed(2)
-        }else {
+        }else if(column.property == 'date'){
+          sums[index] = this.list.length
+        } else {
           sums[index] = sumsModel[column.property]
         }
       })
@@ -748,6 +753,9 @@ export default {
       }
       if(column.columnKey=== 'videos') {
         this.$router.push({path: '/dct/DataManagement/accountData/videoIndex?creator=' + row.creator + '&time='+ time})
+      }
+      if(column.columnKey === 'addVideos'){
+        this.$router.push({path: '/dct/DataManagement/accountData/videoIndex?creator=' + row.creator + '&postTime='+ time})
       }
     },
     checkInOperator(operator){

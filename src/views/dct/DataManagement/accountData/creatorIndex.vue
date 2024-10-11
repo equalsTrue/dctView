@@ -179,13 +179,13 @@
       </el-table-column>
 
 
-      <el-table-column :min-width="calculateWidth" sortable label="活跃数量" column-key="videos" prop="videos">
+      <el-table-column :min-width="calculateWidth" sortable label="活跃视频" column-key="videos" prop="videos">
         <template slot-scope="scope">
           <el-link type="primary">{{ scope.row.videos }}</el-link>
         </template>
       </el-table-column>
 
-      <el-table-column :min-width="calculateWidth" sortable label="新增数量" column-key="addVideos" prop="addVideos">
+      <el-table-column :min-width="calculateWidth" sortable label="新增视频" column-key="addVideos" prop="addVideos">
         <template slot-scope="scope">
           <el-link type="primary">{{ scope.row.addVideos }}</el-link>
         </template>
@@ -438,6 +438,9 @@ export default {
       if(column.columnKey=== 'videos') {
         this.$router.push({path: '/dct/DataManagement/accountData/videoIndex?pid=' + row.product_id  + '&creator=' + this.creator + '&time=' + this.listQuery.time[0] + "," + this.listQuery.time[1]})
       }
+      if(column.columnKey === 'addVideos') {
+        this.$router.push({path: '/dct/DataManagement/accountData/videoIndex?pid=' + row.product_id  + '&creator=' + this.creator + '&postTime=' + this.listQuery.time[0] + "," + this.listQuery.time[1]})
+      }
     },
     checkInOperator(operator){
       if(this.operator.indexOf(operator) > -1 || this.operator.indexOf('all') > -1){
@@ -482,14 +485,17 @@ export default {
           sums[index] = '合计'
           return
         }
-        if(column.property == 'date' || column.property == 'index' || column.property == 'product_id'
+        if(column.property == 'index' || column.property == 'product_id'
             || column.property == 'level_1_category' || column.property == 'level_2_category' || column.property == 'picture'){
           sums[index] == '--'
           return;
         }
         if (dataProperties.indexOf(column.property) >= 0 && (column.property == 'gmv' ||column.property == 'commission' || column.property == 'order_commission' || column.property == 'partner_commission')){
           sums[index] = parseFloat(sumsModel[column.property]).toFixed(2)
-        }else {
+        }else if(column.property == 'date'){
+          sums[index] = this.list.length
+        }
+        else {
           sums[index] = sumsModel[column.property]
         }
       })
