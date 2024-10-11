@@ -334,12 +334,14 @@ export default {
       })
       columns.forEach((column, index) => {
         if (index === 0) {
-          sums[index] = '合计'
+          sums[index] = this.list.length
           return
         }
         if(column.property == 'date' || column.property == 'index' || column.property == 'vid' || column.property == 'url'){
           sums[index] == '--'
-          return;
+        }
+        if(column.property == 'date') {
+          sums[index] == this.list.length
         }
         if (dataProperties.indexOf(column.property) >= 0 && (column.property == 'gmv' ||column.property == 'commission' || column.property == 'order_commission' || column.property == 'partner_commission')){
           sums[index] = parseFloat(sumsModel[column.property]).toFixed(2)

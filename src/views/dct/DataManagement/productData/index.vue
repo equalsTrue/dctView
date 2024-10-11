@@ -4,7 +4,7 @@
     <div class="filter-container">
       <el-row>
 
-        <el-select v-model="listQuery.pid" style="margin-left: 20px" multiple collapse-tags  filterable clearable reserve-keyword placeholder="Handle">
+        <el-select v-model="listQuery.product_id" style="margin-left: 20px" multiple collapse-tags  filterable clearable reserve-keyword placeholder="Handle">
           <el-option
               v-for="item in pidList"
               :key="item"
@@ -46,7 +46,7 @@
         </el-select>
 
 
-        <el-select v-model="listQuery.cid" style="margin-left: 20px" multiple collapse-tags filterable clearable reserve-keyword placeholder="组别">
+        <el-select v-model="listQuery.campaign_id" style="margin-left: 20px" multiple collapse-tags filterable clearable reserve-keyword placeholder="CID">
           <el-option
               v-for="item in cidList"
               :key="item"
@@ -152,7 +152,7 @@
 
       <el-table-column :min-width="calculateWidth" label="图片">
         <template slot-scope="scope">
-          <img :src="scope.row.picture" height="50%" width="50%" >
+          <img :src="scope.row.productPicture" height="50%" width="50%" >
         </template>
       </el-table-column>
 
@@ -280,8 +280,8 @@ export default {
       listQuery: {
         level_1_category:[],
         level_2_category:[],
-        pid:[],
-        cid:[],
+        product_id:[],
+        campaign_id:[],
         user:[],
         time: [
           this.formatDateToday() + ' 00:00:00',
@@ -483,7 +483,7 @@ export default {
           sums[index] == '--'
           return;
         }
-        if (dataProperties.indexOf(column.property) >= 0 && (column.property == 'gmv' ||column.property == 'commission' || column.property == 'order_commission' || column.property == 'partner_commission')){
+        if (dataProperties.indexOf(column.property) >= 0 && (column.property == 'gmv' ||column.property == 'commission' || column.property == 'creator_commission' || column.property == 'partner_commission')){
           sums[index] = parseFloat(sumsModel[column.property]).toFixed(2)
         }else {
           sums[index] = sumsModel[column.property]

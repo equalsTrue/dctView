@@ -270,9 +270,9 @@
       </el-table-column>
 
 
-      <el-table-column :min-width="calculateWidth" label="头像" prop="profile_picture" column-key="profile_picture">
+      <el-table-column :min-width="calculateWidth" label="头像" prop="profile_picture" column-key="creatorPicture">
         <template slot-scope="scope">
-          <img :src="scope.row.profile_picture" height="50%" width="50%" >
+          <img :src="scope.row.creatorPicture" height="50%" width="50%" >
         </template>
       </el-table-column>
 
@@ -621,6 +621,7 @@ export default {
       }
       let params = {pageFilterVo: this.listQuery, pageMetricsVo: this.chooseMetricsList, pageGroupVo: this.chooseGroupList, pageVO: {limit: this.limit, page: this.page, sortColumn: this.sortColumn, sortType: this.sortType}}
       fetchProductGmvList(params).then(response => {
+        debugger
         this.listLoading = false
         this.list = response.data.pageVO.list
       }).catch(() => {
@@ -667,7 +668,7 @@ export default {
           sums[index] == '--'
           return;
         }
-        if (dataProperties.indexOf(column.property) >= 0 && (column.property == 'gmv' ||column.property == 'commission' || column.property == 'order_commission' || column.property == 'partner_commission')){
+        if (dataProperties.indexOf(column.property) >= 0 && (column.property == 'gmv' ||column.property == 'commission' || column.property == 'creator_commission' || column.property == 'partner_commission')){
           sums[index] = parseFloat(sumsModel[column.property]).toFixed(2)
         }else {
           sums[index] = sumsModel[column.property]
@@ -810,6 +811,16 @@ export default {
       }
       return url + '/dct/gmv/file/submit'
     },
+
+    // handleSizeChange(val) {
+    //   this.listQuery.limit = val
+    //   this.getList()
+    // },
+    // // 页码修改后重新加载
+    // handleCurrentChange(val) {
+    //   this.listQuery.page = val
+    //   this.getList()
+    // },
 
     handleDownload() {
       this.downloadLoading = true

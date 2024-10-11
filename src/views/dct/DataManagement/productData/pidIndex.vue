@@ -141,7 +141,7 @@
 
       <el-table-column :min-width="calculateWidth" label="头像">
         <template slot-scope="scope">
-          <img :src="scope.row.profile_picture" height="50%" width="50%" >
+          <img :src="scope.row.creatorPicture" height="50%" width="50%" >
         </template>
       </el-table-column>
 
@@ -199,9 +199,15 @@
         </template>
       </el-table-column>
 
-      <el-table-column :min-width="calculateWidth" label="视频数量" column-key="videos" sortable pro="videos">
+      <el-table-column :min-width="calculateWidth" label="活跃视频数" column-key="videos" sortable pro="videos">
         <template slot-scope="scope">
           <el-link type="primary">{{ scope.row.videos }}</el-link>
+        </template>
+      </el-table-column>
+
+      <el-table-column :min-width="calculateWidth" label="新增视频数" column-key="addVideos" sortable pro="videos">
+        <template slot-scope="scope">
+          <el-link type="primary">{{ scope.row.addVideos }}</el-link>
         </template>
       </el-table-column>
 

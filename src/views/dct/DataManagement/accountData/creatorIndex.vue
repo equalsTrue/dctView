@@ -135,7 +135,7 @@
 
       <el-table-column :min-width="calculateWidth" label="图片" prop="picture">
         <template slot-scope="scope">
-          <img :src="scope.row.picture" height="50%" width="50%" >
+          <img :src="scope.row.productPicture" height="50%" width="50%" >
         </template>
       </el-table-column>
 
@@ -179,9 +179,15 @@
       </el-table-column>
 
 
-      <el-table-column :min-width="calculateWidth" sortable label="视频数量" column-key="videos" prop="videos">
+      <el-table-column :min-width="calculateWidth" sortable label="活跃数量" column-key="videos" prop="videos">
         <template slot-scope="scope">
           <el-link type="primary">{{ scope.row.videos }}</el-link>
+        </template>
+      </el-table-column>
+
+      <el-table-column :min-width="calculateWidth" sortable label="新增数量" column-key="addVideos" prop="addVideos">
+        <template slot-scope="scope">
+          <el-link type="primary">{{ scope.row.addVideos }}</el-link>
         </template>
       </el-table-column>
 
@@ -196,6 +202,19 @@
     </el-table>
 
     <!-- 页码 -->
+
+<!--    <div class="pagination-container" >-->
+<!--      <el-pagination-->
+<!--          background-->
+<!--          @size-change="handleSizeChange"-->
+<!--          @current-change="handleCurrentChange"-->
+<!--          :current-page="listQuery.page"-->
+<!--          :page-sizes="[20,30,50,100,200]"-->
+<!--          :page-size="listQuery.limit"-->
+<!--          layout="total, sizes, prev, pager, next, jumper"-->
+<!--          :total="total">-->
+<!--      </el-pagination>-->
+<!--    </div>-->
 
 
 
@@ -490,7 +509,15 @@ export default {
     },
     // 前往添加页面
 
-
+    // handleSizeChange(val) {
+    //   this.listQuery.limit = val
+    //   this.getList()
+    // },
+    // // 页码修改后重新加载
+    // handleCurrentChange(val) {
+    //   this.listQuery.page = val
+    //   this.getList()
+    // },
     handleDownload() {
       this.downloadLoading = true
       import('@/vendor/Export2Excel').then(excel => {

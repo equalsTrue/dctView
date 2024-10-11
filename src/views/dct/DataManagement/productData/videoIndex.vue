@@ -337,9 +337,11 @@ export default {
           sums[index] = '合计'
           return
         }
-        if(column.property == 'date' || column.property == 'index' || column.property == 'vid' || column.property == 'url'){
+        if(column.property == 'index' || column.property == 'vid' || column.property == 'url'){
           sums[index] == '--'
-          return;
+        }
+        if(column.property == 'date') {
+          sums[index] == this.list.length
         }
         if (dataProperties.indexOf(column.property) >= 0 && (column.property == 'gmv' ||column.property == 'commission')){
           sums[index] = parseFloat(sumsModel[column.property]).toFixed(2)
