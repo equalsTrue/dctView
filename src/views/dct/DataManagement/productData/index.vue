@@ -222,19 +222,21 @@
 
     </el-table>
 
-<!--    &lt;!&ndash; 页码 &ndash;&gt;-->
-<!--    <div class="pagination-container">-->
-<!--      <el-pagination-->
-<!--        background-->
-<!--        @size-change="handleSizeChange"-->
-<!--        @current-change="handleCurrentChange"-->
-<!--        :current-page="listQuery.page"-->
-<!--        :page-sizes="[10,20,30,50]"-->
-<!--        :page-size="listQuery.limit"-->
-<!--        layout="total, sizes, prev, pager, next, jumper"-->
-<!--        :total="total">-->
-<!--      </el-pagination>-->
-<!--    </div>-->
+    <!-- 页码 -->
+    <div class="pagination-container">
+      <el-pagination
+        background
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="listQuery.page"
+        :page-sizes="[10,20,30,50]"
+        :page-size="listQuery.limit"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total">
+      </el-pagination>
+    </div>
+
+
 
 
 
@@ -275,6 +277,7 @@ export default {
       operator:'',
       // 列表数据总计
       total: null,
+      groupbyDay: false,
       // 列表加载状态
       listLoading: false,
       pidList: [],
@@ -295,7 +298,9 @@ export default {
         time: [
           this.formatDateToday() + ' 00:00:00',
           this.formatDateToday() + ' 23:59:59'
-        ]
+        ],
+        limit:10,
+        page:1,
       },
       regionList:[],
       dialogLog: false,
@@ -376,7 +381,7 @@ export default {
         this.$store.state.tagsView.visitedViews[index].query = Object.assign({}, this.listQuery)
       }
       this.listLoading = false
-      this.chooseMetricsList = ['product_name','product_id','level_1_category','level_2_category','orders','gmv','videos','video_views']
+      this.chooseMetricsList = ['product_id','orders','gmv','videos','video_views']
       if(this.chooseGroupList.indexOf("day") >= 0){
         this.chooseMetricsList.push("date")
       }
@@ -444,11 +449,12 @@ export default {
     },
     // 修改筛选添加后重新加载列表数据
     handleFilter() {
-      this.chooseGroupList = ['product_id','product_name','level_1_category','level_2_category']
+      this.chooseGroupList = ['product_id']
       this.getList()
     },
     handleFilterByDay(){
-      this.chooseGroupList = ['day','product_id','product_name','level_1_category','level_2_category']
+      this.chooseGroupList = ['day','product_id']
+      this.groupbyDay = true
       this.getList()
     },
 
@@ -545,6 +551,25 @@ export default {
       })
     },
 
+    handleSizeChange(val) {
+      this.listQuery.limit = val
+      if(this.groupbyDay){
+        this.chooseGroupList = ['product_id','day']
+      }else {
+        this.chooseGroupList = ['product_id']
+      }
+      this.getList()
+    },
+    // 页码修改后重新加载
+    handleCurrentChange(val) {
+      this.listQuery.page = val
+      if(this.groupbyDay){
+        this.chooseGroupList = ['product_id','day']
+      }else {
+        this.chooseGroupList = ['product_id']
+      }
+      this.getList()
+    },
     handleDownload() {
       this.downloadLoading = true
       import('@/vendor/Export2Excel').then(excel => {

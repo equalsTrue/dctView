@@ -357,18 +357,18 @@
     </el-table>
 
     <!-- 页码 -->
-<!--    <div class="pagination-container">-->
-<!--      <el-pagination-->
-<!--        background-->
-<!--        @size-change="handleSizeChange"-->
-<!--        @current-change="handleCurrentChange"-->
-<!--        :current-page="listQuery.page"-->
-<!--        :page-sizes="[10,20,30,50]"-->
-<!--        :page-size="listQuery.limit"-->
-<!--        layout="total, sizes, prev, pager, next, jumper"-->
-<!--        :total="total">-->
-<!--      </el-pagination>-->
-<!--    </div>-->
+    <div class="pagination-container">
+      <el-pagination
+          background
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="listQuery.page"
+          :page-sizes="[10,20,30,50]"
+          :page-size="listQuery.limit"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total">
+      </el-pagination>
+    </div>
 
 
 
@@ -419,6 +419,7 @@ export default {
       // 列表数据集
       list: null,
       operator:'',
+      groupbyDay:false,
       // 列表数据总计
       total: null,
       // 列表加载状态
@@ -435,7 +436,9 @@ export default {
         time: [
           this.formatDateToday() + ' 00:00:00',
           this.formatDateToday() + ' 23:59:59'
-        ]
+        ],
+        limit:10,
+        page:1
       },
       dialogFileVisible: false,
       dialogLog: false,
@@ -631,6 +634,26 @@ export default {
       })
     },
 
+    handleSizeChange(val) {
+      this.listQuery.limit = val
+      if(this.groupbyDay){
+        this.chooseGroupList = ['creator','day']
+      }else {
+        this.chooseGroupList = ['creator']
+      }
+      this.getList()
+    },
+    // 页码修改后重新加载
+    handleCurrentChange(val) {
+      this.listQuery.page = val
+      if(this.groupbyDay){
+        this.chooseGroupList = ['creator','day']
+      }else {
+        this.chooseGroupList = ['creator']
+      }
+      this.getList()
+    },
+
     getSummaries(param) {
       debugger
       const {columns, data} = param
@@ -803,6 +826,7 @@ export default {
     },
     handleFilterByDay(){
       this.chooseGroupList = ['day','creator','country']
+      this.groupbyDay = true
       this.getList()
     },
     // 处理选择框改变时
