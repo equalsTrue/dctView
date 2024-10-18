@@ -165,7 +165,7 @@
 
       <el-table-column :min-width="calculateWidth" label="图片">
         <template slot-scope="scope">
-          <img :src="scope.row.picture" height="50%" width="50%" >
+          <img :src="scope.row.picture" height="150%" width="100%" >
         </template>
       </el-table-column>
 
@@ -208,13 +208,13 @@
 
       <el-table-column :min-width="calculateWidth" label="区域">
         <template slot-scope="scope">
-          <span>{{ scope.row.region }}</span>
+          <span>{{ handleReign(scope.row.region) }}</span>
         </template>
       </el-table-column>
 
       <el-table-column :min-width="calculateWidth" label="存放地点">
         <template slot-scope="scope">
-          <span>{{ scope.row.storeLocation }}</span>
+          <span>{{ scope.row.storageLocation }}</span>
         </template>
       </el-table-column>
 
@@ -510,6 +510,15 @@ export default {
     },
     paresDate(time) {
       return moment(time).format('YYYY-MM-DD HH:mm:ss')
+    },
+    handleReign(param){
+      if(param == 'us'){
+        return '美区'
+      }else if(param == 'uk'){
+        return '英区'
+      }else {
+        return  param
+      }
     },
     // 获取列表数据
     getList() {

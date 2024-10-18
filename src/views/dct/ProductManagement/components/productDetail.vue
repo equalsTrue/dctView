@@ -77,8 +77,15 @@
               </el-col>
               <el-col :span="10">
                 <el-form-item label-width="100px" style="margin-bottom: 40px;margin-left: 17%" label="区域:" prop="region">
-                  <el-input class="rt-input" v-model="formData.region"  style="">
-                  </el-input>
+                  <el-select v-model="formData.region" filterable clearable placeholder="请选择区域" >
+                    <el-option
+                        v-for="item in regions"
+                        :key="item.label"
+                        :label="item.label"
+                        :value="item.value">
+                      <span style="float: left">{{ item.label }}</span>
+                    </el-option>
+                  </el-select>
                 </el-form-item>
               </el-col>
 
@@ -106,7 +113,7 @@
 
               <el-col :span="10">
                 <el-form-item label-width="100px" style="margin-bottom: 40px;margin-left: 17%" label="存放地点:" prop="location">
-                  <el-input class="rt-input" v-model="formData.storeLocation"  style="">
+                  <el-input class="rt-input" v-model="formData.storageLocation"  style="">
                   </el-input>
                 </el-form-item>
               </el-col>
@@ -156,7 +163,7 @@ import axios from 'axios'
 const defaultForm = {
   pid: '',
   region: '',
-  storeLocation: '',
+  storageLocation: '',
   count: 0,
   id: '',
   status: '',
@@ -221,6 +228,10 @@ export default {
         {label: '申请中', value: 2},
         {label: '拍摄中', value: 3}
       ],
+      regions:[
+        {label: '英区', value: 'uk'},
+        {label: '美区', value: 'us'},
+      ],
       fetchSuccess: true,
       loading: false,
       submitPictureUrl: '',
@@ -247,12 +258,12 @@ export default {
   computed: {},
   created() {
     this.localPageUser = this.$store.getters.name
+    this.fetchParams()
     // 判断是否是编辑态并且传入id
     if (this.isEdit && this.detailId) {
       this.fetchData(this.detailId)
     } else {
       this.formData = Object.assign({}, defaultForm)
-      this.fetchParams()
       this.generatePictureUrl(this.formData.pid )
     }
   },
@@ -285,6 +296,7 @@ export default {
     },
     fetchData(query) {
       fetchProduct(query).then(response => {
+        debugger
         this.formData = response.data
         this.generatePictureUrl(this.formData.pid)
         if(response.data.picture !== '' && response.data.picture != null){

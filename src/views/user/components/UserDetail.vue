@@ -199,7 +199,7 @@ export default {
       rules: {
         username: [
           { required: true, validator: validateRequire, trigger: 'blur' },
-          { min: 6, max: 30, message: '长度在 6 到 30 个字符', trigger: 'blur' }
+          { min: 2, max: 6, message: '长度在 2 到 6 个字符', trigger: 'blur' }
         ],
         password: [
           { required: true, trigger: 'blur', validator: validatePassword },
