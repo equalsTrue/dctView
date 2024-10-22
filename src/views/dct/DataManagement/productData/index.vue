@@ -246,7 +246,7 @@
 
 <script>
 // 数据接口
-import {fetchProductGmvList,fetchPidGmvParams } from '@/api/dct'
+import {fetchProductGmvList,fetchPidGmvParams,findProductName } from '@/api/dct'
 // 按钮动画特效 - 水波纹指令
 import waves from '@/directive/waves'
 import {parseTime} from '@/utils'
@@ -381,7 +381,7 @@ export default {
         this.$store.state.tagsView.visitedViews[index].query = Object.assign({}, this.listQuery)
       }
       this.listLoading = false
-      this.chooseMetricsList = ['product_id','orders','gmv','videos','video_views']
+      this.chooseMetricsList = ['product_id','level_1_category','level_2_category','orders','gmv','videos','video_views']
       if(this.chooseGroupList.indexOf("day") >= 0){
         this.chooseMetricsList.push("date")
       }
@@ -392,8 +392,15 @@ export default {
         this.listLoading = false
       }).catch(() => {
       })
+      // this.list.forEach(a=>{
+      //   a.product_name = this.queryProductName(a.product_id)
+      // })
     },
-
+    queryProductName(pid){
+      findProductName(pid).then(response =>{
+        return response
+      })
+    },
     formatDateToday() {
       let date = new Date();
       let seperator = "-";
@@ -449,11 +456,11 @@ export default {
     },
     // 修改筛选添加后重新加载列表数据
     handleFilter() {
-      this.chooseGroupList = ['product_id']
+      this.chooseGroupList = ['product_id','level_1_category','level_2_category']
       this.getList()
     },
     handleFilterByDay(){
-      this.chooseGroupList = ['day','product_id']
+      this.chooseGroupList = ['day','product_id','level_1_category','level_2_category']
       this.groupbyDay = true
       this.getList()
     },
@@ -554,9 +561,9 @@ export default {
     handleSizeChange(val) {
       this.listQuery.limit = val
       if(this.groupbyDay){
-        this.chooseGroupList = ['product_id','day']
+        this.chooseGroupList = ['product_id','day','level_1_category','level_2_category']
       }else {
-        this.chooseGroupList = ['product_id']
+        this.chooseGroupList = ['product_id','level_1_category','level_2_category']
       }
       this.getList()
     },
@@ -564,9 +571,9 @@ export default {
     handleCurrentChange(val) {
       this.listQuery.page = val
       if(this.groupbyDay){
-        this.chooseGroupList = ['product_id','day']
+        this.chooseGroupList = ['product_id','day','level_1_category','level_2_category']
       }else {
-        this.chooseGroupList = ['product_id']
+        this.chooseGroupList = ['product_id','level_1_category','level_2_category']
       }
       this.getList()
     },

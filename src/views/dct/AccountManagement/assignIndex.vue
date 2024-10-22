@@ -17,7 +17,7 @@
           </el-option>
         </el-select>
 
-        <el-select v-model="listQuery.pid" style="margin-left: 20px" multiple filterable clearable reserve-keyword placeholder="UID">
+        <el-select v-model="listQuery.uid" style="margin-left: 20px" multiple filterable clearable reserve-keyword placeholder="UID">
           <el-option
             v-for="item in uidList"
             :key="item"
@@ -43,7 +43,7 @@
 
 
 
-        <el-select v-model="listQuery.status" style="margin-left: 20px" multiple filterable clearable reserve-keyword placeholder="状态">
+        <el-select v-model="listQuery.assignStatus" style="margin-left: 20px" multiple filterable clearable reserve-keyword placeholder="分配状态">
           <el-option
               v-for="item in statusList"
               :key="item.value"
@@ -330,11 +330,11 @@ export default {
         page: 1,
         limit: 10,
         uid: '',
-        creator: '',
-        status: '',
-        belongPerson: '',
-        country: '',
-        userGroup: '',
+        creator: [],
+        assignStatus: [],
+        belongPerson: [],
+        country: [],
+        userGroup: [],
       },
       dialogCommodityLog: false,
       dateRange: [

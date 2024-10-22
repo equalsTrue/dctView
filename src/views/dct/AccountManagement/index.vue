@@ -431,7 +431,7 @@ export default {
       // 列表请求条件，既给接口传递的参数
       listQuery: {
         page: 1,
-        assignStatus:'',
+        assignStatus:[],
         limit: 10,
         uid:[],
         creator:[],
@@ -551,7 +551,7 @@ export default {
         this.listQuery.begin = moment(this.dateRange[0]).format('YYYY-MM-DD')
         this.listQuery.end = moment(this.dateRange[1]).format('YYYY-MM-DD')
       }
-      this.listQuery.assignStatus = 1
+      this.listQuery.assignStatus = [1]
       fetchAccountList(this.listQuery).then(response => {
         debugger
         this.total = response.data.total

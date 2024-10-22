@@ -18,6 +18,19 @@
           </el-option>
         </el-select>
 
+        <el-select v-model="listQuery.creator_type" style="margin-left: 20px" multiple collapse-tags  filterable clearable reserve-keyword placeholder="creator类型">
+          <el-option
+              v-for="item in creatorTypes"
+              :key="item.label"
+              :label="item.label"
+              :value="item.value">
+            <span style="float: left">{{ item.label }}</span>
+            <span v-if="item.label !== item.value" style="float: right; color: #8492a6; font-size: 13px">{{
+                item.value
+              }}</span>
+          </el-option>
+        </el-select>
+
         <el-select v-model="listQuery.creator" style="margin-left: 20px" multiple collapse-tags  filterable clearable reserve-keyword placeholder="Handle">
           <el-option
               v-for="item in creatorList"
@@ -428,6 +441,7 @@ export default {
       // 列表请求条件，既给接口传递的参数
       listQuery: {
         account:[],
+        creator_type:[],
         creator:[],
         country:[],
         status:[],
@@ -509,6 +523,10 @@ export default {
         {label: '封号', value: 1},
         {label: '弃用', value: 2}
       ],
+      creatorTypes:[
+        {label: '自有账号', value: 0},
+        {label: '其他账号', value: 1}
+      ],
       groupList:[],
       // 列表头部的筛选条件
       uidList: [],
@@ -549,7 +567,6 @@ export default {
 
 
     upLoadGmvFile(e, index) {
-      debugger
       var file = e.target.files[0];
       var form = {};
       form = new FormData();
@@ -558,7 +575,6 @@ export default {
     },
 
     upLoadVidFile(e, index) {
-      debugger
       var file = e.target.files[0];
       var form = {};
       form = new FormData();
@@ -594,7 +610,6 @@ export default {
       this.submitList.push(submitReport)
     },
     deleteSubmitList(item) {
-      debugger
       const index = this.submitList.indexOf(item)
       if (index !== -1) {
         this.submitList.splice(index, 1);
@@ -627,7 +642,6 @@ export default {
       }
       let params = {pageFilterVo: this.listQuery, pageMetricsVo: this.chooseMetricsList, pageGroupVo: this.chooseGroupList, pageVO: {limit: this.limit, page: this.page, sortColumn: this.sortColumn, sortType: this.sortType}}
       fetchProductGmvList(params).then(response => {
-        debugger
         this.listLoading = false
         this.list = response.data.pageVO.list
       }).catch(() => {
@@ -637,9 +651,9 @@ export default {
     handleSizeChange(val) {
       this.listQuery.limit = val
       if(this.groupbyDay){
-        this.chooseGroupList = ['creator','day']
+        this.chooseGroupList = ['creator','country','day']
       }else {
-        this.chooseGroupList = ['creator']
+        this.chooseGroupList = ['creator','country']
       }
       this.getList()
     },
@@ -647,15 +661,14 @@ export default {
     handleCurrentChange(val) {
       this.listQuery.page = val
       if(this.groupbyDay){
-        this.chooseGroupList = ['creator','day']
+        this.chooseGroupList = ['creator','country','day']
       }else {
-        this.chooseGroupList = ['creator']
+        this.chooseGroupList = ['creator','country']
       }
       this.getList()
     },
 
     getSummaries(param) {
-      debugger
       const {columns, data} = param
       const sums = []
       if (!data || data.length === 0) {
@@ -792,7 +805,7 @@ export default {
     submitUpload() {
       let list = this.submitList;
       const formData = new FormData();
-      debugger
+
       for (let i = 0; i < list.length; i++) {
         const fn = new File([], 'null')
         formData.append('gmvFile', this.submitList[i].gmvFile == null ? fn : this.submitList[i].gmvFile)

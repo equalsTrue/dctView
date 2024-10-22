@@ -184,3 +184,10 @@ export function fetchPerPidList(params){
         data: params
     })
 }
+
+export function findProductName(pid){
+    return request({
+        url: '/dct/gmv/find/productName?pid=' + pid,
+        method: 'get'
+    })
+}
