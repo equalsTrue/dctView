@@ -30,7 +30,7 @@
           </el-option>
         </el-select>
 
-        <el-select v-model="listQuery.manager" style="margin-left: 20px" multiple collapse-tags filterable clearable reserve-keyword placeholder="管理人">
+        <el-select v-model="listQuery.belongPerson" style="margin-left: 20px" multiple collapse-tags filterable clearable reserve-keyword placeholder="归属人">
           <el-option
               v-for="item in userList"
               :key="item"
@@ -436,7 +436,7 @@ export default {
         uid:[],
         creator:[],
         status:[],
-        user:[],
+        belongPerson:[],
         country:[],
         userGroup:[],
       },
