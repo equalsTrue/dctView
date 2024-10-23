@@ -5,7 +5,7 @@
       <el-row>
 
 
-        <el-select v-model="listQuery.product_id" style="margin-left: 20px" multiple collapse-tags  filterable clearable reserve-keyword placeholder="Handle">
+        <el-select v-model="listQuery.product_id" style="margin-left: 20px" multiple collapse-tags  filterable clearable reserve-keyword placeholder="PID">
           <el-option
               v-for="item in pidList"
               :key="item"
