@@ -272,6 +272,7 @@ export default {
       ],
       // 表格的key，改变后表格会重新渲染
       tableKey: 0,
+      user:'',
       // 列表数据集
       list: null,
       operator:'',
@@ -349,6 +350,7 @@ export default {
   },
   filters: {},
   created() {
+    this.user = this.$store.getters.name
     // if (this.$route.query && Object.getOwnPropertyNames(this.$route.query).length > 1) {
     //   this.listQuery = this.$route.query
     // }
@@ -386,7 +388,7 @@ export default {
         this.chooseMetricsList.push("date")
       }
       let params = {pageFilterVo: this.listQuery, pageMetricsVo: this.chooseMetricsList, pageGroupVo: this.chooseGroupList, pageVO: {limit: this.limit, page: this.page, sortColumn: this.sortColumn, sortType: this.sortType}}
-      fetchProductGmvList(params).then(response => {
+      fetchProductGmvList(params,this.user).then(response => {
         this.list = response.data.pageVO.list
         this.total = response.data.pageVO.total
         this.listLoading = false

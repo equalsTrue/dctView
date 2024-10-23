@@ -138,9 +138,9 @@ export function queryAccountLog(params){
     })
 }
 
-export function fetchProductGmvList(params){
+export function fetchProductGmvList(params,user){
     return request({
-        url: '/dct/gmv/list',
+        url: '/dct/gmv/list?user=' + user,
         method: 'post',
         data: params
     })
@@ -161,9 +161,9 @@ export function fetchVideoList(params){
     })
 }
 
-export function fetchCreatorGmvParams(){
+export function fetchCreatorGmvParams(user){
     return request({
-        url: '/dct/gmv/creator/list/params',
+        url: '/dct/gmv/creator/list/params?user=' + user,
         method: 'get'
     })
 }

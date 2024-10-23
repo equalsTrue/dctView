@@ -258,7 +258,7 @@
       element-loading-text="拼命加载中"
       border
       fit
-      max-height="600px"
+      max-height="70%"
       :summary-method="getSummaries"
       show-summary
       highlight-current-row
@@ -435,6 +435,7 @@ export default {
       groupbyDay:false,
       // 列表数据总计
       total: null,
+      user: '',
       // 列表加载状态
       listLoading: false,
       shopLogList: [],
@@ -545,6 +546,7 @@ export default {
   },
   filters: {},
   created() {
+    this.user = this.$store.getters.name
     if (this.$route.query && Object.getOwnPropertyNames(this.$route.query).length > 1) {
       this.listQuery = this.$route.query
       this.list = this.$route.list
@@ -556,7 +558,7 @@ export default {
     // 初始化选择框
     initSelector() {
       // 获取参数
-      fetchCreatorGmvParams().then(response => {
+      fetchCreatorGmvParams(this.user).then(response => {
         this.userList = response.data.user
         this.creatorList = response.data.creator
         this.userGroupList = response.data.userGroup
@@ -641,7 +643,7 @@ export default {
         this.chooseMetricsList.push("date")
       }
       let params = {pageFilterVo: this.listQuery, pageMetricsVo: this.chooseMetricsList, pageGroupVo: this.chooseGroupList, pageVO: {limit: this.limit, page: this.page, sortColumn: this.sortColumn, sortType: this.sortType}}
-      fetchProductGmvList(params).then(response => {
+      fetchProductGmvList(params,this.user).then(response => {
         this.listLoading = false
         this.list = response.data.pageVO.list
       }).catch(() => {

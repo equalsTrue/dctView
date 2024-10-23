@@ -107,7 +107,7 @@
       element-loading-text="拼命加载中"
       border
       fit
-      max-height="600px"
+      max-height="800"
       :summary-method="getSummaries"
       show-summary
       highlight-current-row

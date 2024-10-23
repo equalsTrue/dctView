@@ -337,7 +337,7 @@
         fit
         highlight-current-row
         style="width: 100%"
-        height="650">
+        max-height="70%">
         <el-table-column min-width="80px" label="createtime" prop="createtime">
           <template slot-scope="scope">
             <span>{{paresDate(new Date(scope.row.createTime))}}</span>
