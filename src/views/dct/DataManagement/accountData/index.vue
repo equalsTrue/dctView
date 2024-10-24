@@ -4,7 +4,6 @@
     <div class="filter-container">
       <el-row>
 
-
         <el-select v-model="listQuery.account" style="margin-left: 20px" multiple collapse-tags  filterable clearable reserve-keyword placeholder="账号">
           <el-option
               v-for="item in accountList"
