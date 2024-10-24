@@ -24,9 +24,9 @@
               <el-col :span="10">
                 <el-form-item label-width="100px" style="margin-bottom: 40px;" label="Handle:" prop="creator">
                   <el-input
-                    placeholder="请输入Handle"
-                    v-model="formData.creator"
-                    clearable>
+                      placeholder="请输入Handle"
+                      v-model="formData.creator"
+                      clearable>
                   </el-input>
                 </el-form-item>
               </el-col>
@@ -62,18 +62,54 @@
                 </el-form-item>
               </el-col>
 
-<!--              <el-form-item label-width="100px" style="margin-left: 10%" label="归属人:" prop="belongPerson">-->
-<!--                <el-select v-model="formData.belongPerson" filterable clearable placeholder="请选择归属人" >-->
-<!--                  <el-option-->
-<!--                      v-for="item in userList"-->
-<!--                      :key="item"-->
-<!--                      :label="item"-->
-<!--                      :value="item">-->
-<!--                    <span style="float: left">{{ item }}</span>-->
-<!--                  </el-option>-->
-<!--                </el-select>-->
-<!--              </el-form-item>-->
+              <!--              <el-form-item label-width="100px" style="margin-left: 10%" label="归属人:" prop="belongPerson">-->
+              <!--                <el-select v-model="formData.belongPerson" filterable clearable placeholder="请选择归属人" >-->
+              <!--                  <el-option-->
+              <!--                      v-for="item in userList"-->
+              <!--                      :key="item"-->
+              <!--                      :label="item"-->
+              <!--                      :value="item">-->
+              <!--                    <span style="float: left">{{ item }}</span>-->
+              <!--                  </el-option>-->
+              <!--                </el-select>-->
+              <!--              </el-form-item>-->
 
+            </el-row>
+            <el-row>
+
+              <el-col :span="10">
+                <el-form-item label-width="100px" style="margin-bottom: 40px;" label="账号类型:" prop="account_type">
+                  <el-input
+                      placeholder="请输入账号类型"
+                      v-model="formData.account_type"
+                      clearable>
+                  </el-input>
+                </el-form-item>
+              </el-col>
+
+
+              <el-col :span="10">
+                <el-form-item label-width="100px" style="margin-bottom: 40px;" label="类目:" prop="category">
+                  <el-input
+                      placeholder="请输入类目"
+                      v-model="formData.category"
+                      clearable>
+                  </el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+
+            <el-row>
+
+              <el-col :span="10">
+                <el-form-item label-width="100px" style="margin-bottom: 40px;" label="备注:" prop="notes">
+                  <el-input
+                      placeholder="请输入备注"
+                      v-model="formData.notes"
+                      clearable>
+                  </el-input>
+                </el-form-item>
+              </el-col>
             </el-row>
 
 
@@ -104,7 +140,11 @@ const defaultForm = {
   user: '',
   id: '',
   creator: '',
-  manager: ''
+  manager: '',
+  // belongPerson: '',
+  account_type: '',
+  category:'',
+  notes: ''
 }
 
 
@@ -254,46 +294,46 @@ export default {
 .createPost-container {
   position: relative;
 
-.createPost-main-container {
-  padding: 40px 45px 20px 50px;
+  .createPost-main-container {
+    padding: 40px 45px 20px 50px;
 
-.postInfo-container {
-  position: relative;
-  @include clearfix;
-  margin-bottom: 10px;
+    .postInfo-container {
+      position: relative;
+      @include clearfix;
+      margin-bottom: 10px;
 
-.postInfo-container-item {
-  float: left;
-}
+      .postInfo-container-item {
+        float: left;
+      }
 
-}
-.editor-container {
-  min-height: 500px;
-  margin: 0 0 30px;
+    }
+    .editor-container {
+      min-height: 500px;
+      margin: 0 0 30px;
 
-.editor-upload-btn-container {
-  text-align: right;
-  margin-right: 10px;
+      .editor-upload-btn-container {
+        text-align: right;
+        margin-right: 10px;
 
-.editor-upload-btn {
-  display: inline-block;
-}
+        .editor-upload-btn {
+          display: inline-block;
+        }
 
-}
-}
-}
-.rt-input /deep/ .el-input__inner {
-  color: black !important;
-  cursor: pointer;
-}
+      }
+    }
+  }
+  .rt-input /deep/ .el-input__inner {
+    color: black !important;
+    cursor: pointer;
+  }
 
 
-.word-counter {
-  width: 40px;
-  position: absolute;
-  right: -10px;
-  top: 0px;
-}
+  .word-counter {
+    width: 40px;
+    position: absolute;
+    right: -10px;
+    top: 0px;
+  }
 
 }
 </style>

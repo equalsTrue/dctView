@@ -4,6 +4,7 @@
     <div class="filter-container">
       <el-row>
 
+
         <el-select v-model="listQuery.account" style="margin-left: 20px" multiple collapse-tags  filterable clearable reserve-keyword placeholder="账号">
           <el-option
               v-for="item in accountList"
@@ -133,7 +134,7 @@
         </el-button>
 
         <el-button   v-waves class="filter-item" type="danger" @click="handleDownload"
-                    style="margin-left: 1%;background-color: purple">导出查询数据
+                     style="margin-left: 1%;background-color: purple">导出查询数据
         </el-button>
 
         <!-- 添加按钮 -->
@@ -251,19 +252,19 @@
 
     <!-- 表格 -->
     <el-table
-      :key='tableKey'
-      :data="list"
-      v-loading="listLoading"
-      element-loading-text="拼命加载中"
-      border
-      fit
-      max-height="70%"
-      :summary-method="getSummaries"
-      show-summary
-      highlight-current-row
-      style="min-width: 100%"
-      @selection-change="handleSelectionChange"
-      @cell-dblclick="handleCellDoubleClick"
+        :key='tableKey'
+        :data="list"
+        v-loading="listLoading"
+        element-loading-text="拼命加载中"
+        border
+        fit
+        max-height="70%"
+        :summary-method="getSummaries"
+        show-summary
+        highlight-current-row
+        style="min-width: 100%"
+        @selection-change="handleSelectionChange"
+        @cell-dblclick="handleCellDoubleClick"
     >
       <!-- 选择框 -->
       <el-table-column type="selection" width=55>
@@ -330,9 +331,21 @@
         </template>
       </el-table-column>
 
+      <el-table-column :min-width="calculateWidth" label="预估Creator佣金" sortable prop="estimated_creator_commission" column-key="creator_commission">
+        <template slot-scope="scope">
+          <span>{{ parseFloat(scope.row.estimated_creator_commission).toFixed(3) }}</span>
+        </template>
+      </el-table-column>
+
       <el-table-column :min-width="calculateWidth" label="Creator佣金" sortable prop="creator_commission" column-key="creator_commission">
         <template slot-scope="scope">
           <span>{{ parseFloat(scope.row.creator_commission).toFixed(3) }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column :min-width="calculateWidth" label="预估Partner佣金" sortable prop="estimated_partner_commission" column-key="partner_commission">
+        <template slot-scope="scope">
+          <span>{{ parseFloat(scope.row.estimated_partner_commission).toFixed(3) }}</span>
         </template>
       </el-table-column>
 
@@ -637,7 +650,7 @@ export default {
         this.$store.state.tagsView.visitedViews[index].query = Object.assign({}, this.listQuery)
       }
       this.listLoading = false
-      this.chooseMetricsList = ['creator','country','gmv','videos','video_views','creator_commission','partner_commission']
+      this.chooseMetricsList = ['creator','country','gmv','videos','video_views','estimated_creator_commission','creator_commission','estimated_partner_commission','partner_commission']
       if(this.chooseGroupList.indexOf("day") >= 0){
         this.chooseMetricsList.push("date")
       }
@@ -773,10 +786,10 @@ export default {
           break;
         case 1:
           str = '封号'
-              break;
+          break;
         case 2:
           str = '弃用'
-              break;
+          break;
       }
       return str
     },

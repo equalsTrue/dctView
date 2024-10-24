@@ -19,10 +19,10 @@
 
         <el-select v-model="listQuery.uid" style="margin-left: 20px" multiple filterable clearable reserve-keyword placeholder="UID">
           <el-option
-            v-for="item in uidList"
-            :key="item"
-            :label="item"
-            :value="item">
+              v-for="item in uidList"
+              :key="item"
+              :label="item"
+              :value="item">
             <span style="float: left">{{ item }}</span>
             <span v-if="item !== item" style="float: right; color: #8492a6; font-size: 13px">{{
                 item
@@ -112,14 +112,14 @@
 
           <el-row>
 
-<!--            <el-col :span="8">-->
-<!--              <el-button type="primary" icon="el-icon-plus" circle style="margin-left: 110px" size="medium"-->
-<!--                         @click="addSubmitList()"></el-button>-->
+            <!--            <el-col :span="8">-->
+            <!--              <el-button type="primary" icon="el-icon-plus" circle style="margin-left: 110px" size="medium"-->
+            <!--                         @click="addSubmitList()"></el-button>-->
 
-<!--              <el-button v-if="submitList.length > 1" type="danger" icon="el-icon-minus" circle-->
-<!--                         style="margin-left: 55px"-->
-<!--                         size="medium" @click="deleteSubmitList(item)"></el-button>-->
-<!--            </el-col>-->
+            <!--              <el-button v-if="submitList.length > 1" type="danger" icon="el-icon-minus" circle-->
+            <!--                         style="margin-left: 55px"-->
+            <!--                         size="medium" @click="deleteSubmitList(item)"></el-button>-->
+            <!--            </el-col>-->
 
           </el-row>
 
@@ -137,16 +137,16 @@
 
     <!-- 表格 -->
     <el-table
-      :key='tableKey'
-      :data="list"
-      v-loading="listLoading"
-      element-loading-text="拼命加载中"
-      border
-      fit
-      highlight-current-row
-      style="min-width: 100%"
-      @selection-change="handleSelectionChange"
-      @cell-dblclick="handleCellDoubleClick"
+        :key='tableKey'
+        :data="list"
+        v-loading="listLoading"
+        element-loading-text="拼命加载中"
+        border
+        fit
+        highlight-current-row
+        style="min-width: 100%"
+        @selection-change="handleSelectionChange"
+        @cell-dblclick="handleCellDoubleClick"
     >
       <!-- 选择框 -->
       <el-table-column type="selection" width=55>
@@ -206,7 +206,17 @@
         </template>
       </el-table-column>
 
+      <el-table-column min-width="20px" label="账号类型">
+        <template slot-scope="scope">
+          <span>{{ scope.row.account_type }}</span>
+        </template>
+      </el-table-column>
 
+      <el-table-column min-width="20px" label="类目">
+        <template slot-scope="scope">
+          <span>{{ scope.row.category }}</span>
+        </template>
+      </el-table-column>
 
       <el-table-column min-width="20px" label="状态" column-key="status">
         <template slot-scope="scope">
@@ -264,19 +274,25 @@
         </template>
       </el-table-column>
 
+      <el-table-column min-width="20px" label="备注">
+        <template slot-scope="scope">
+          <span>{{ scope.row.notes }}</span>
+        </template>
+      </el-table-column>
+
     </el-table>
 
     <!-- 页码 -->
     <div class="pagination-container">
       <el-pagination
-        background
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="listQuery.page"
-        :page-sizes="[10,20,30,50]"
-        :page-size="listQuery.limit"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="total">
+          background
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="listQuery.page"
+          :page-sizes="[10,20,30,50]"
+          :page-size="listQuery.limit"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total">
       </el-pagination>
     </div>
 

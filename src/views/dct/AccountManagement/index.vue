@@ -19,10 +19,10 @@
 
         <el-select v-model="listQuery.uid"  style="margin-left: 20px" multiple collapse-tags filterable clearable reserve-keyword placeholder="UID">
           <el-option
-            v-for="item in uidList"
-            :key="item"
-            :label="item"
-            :value="item">
+              v-for="item in uidList"
+              :key="item"
+              :label="item"
+              :value="item">
             <span style="float: left">{{ item }}</span>
             <span v-if="item !== item" style="float: right; color: #8492a6; font-size: 13px">{{
                 item
@@ -121,16 +121,16 @@
 
     <!-- 表格 -->
     <el-table
-      :key='tableKey'
-      :data="list"
-      v-loading="listLoading"
-      element-loading-text="拼命加载中"
-      border
-      fit
-      highlight-current-row
-      style="min-width: 100%"
-      @selection-change="handleSelectionChange"
-      @cell-dblclick="handleCellDoubleClick"
+        :key='tableKey'
+        :data="list"
+        v-loading="listLoading"
+        element-loading-text="拼命加载中"
+        border
+        fit
+        highlight-current-row
+        style="min-width: 100%"
+        @selection-change="handleSelectionChange"
+        @cell-dblclick="handleCellDoubleClick"
     >
       <!-- 选择框 -->
       <el-table-column type="selection" width=55>
@@ -204,6 +204,17 @@
         </template>
       </el-table-column>
 
+      <el-table-column min-width="20px" label="账号类型">
+        <template slot-scope="scope">
+          <span>{{ scope.row.account_type }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column min-width="20px" label="类目">
+        <template slot-scope="scope">
+          <span>{{ scope.row.category }}</span>
+        </template>
+      </el-table-column>
 
       <el-table-column min-width="20px" label="状态" column-key="status">
         <template slot-scope="scope">
@@ -229,7 +240,7 @@
               <el-button type="warning" plain size="mini" :key="scope.row.id + '-Status-selector-cancel'" @click="scope.row.inputStatusVisible = false">{{$t('table.cancel')}}</el-button>
 
             </el-dialog>
-            </div>        </template>
+          </div>        </template>
       </el-table-column>
 
 
@@ -242,6 +253,12 @@
       <el-table-column min-width="30px" label="封号日期">
         <template slot-scope="scope">
           <span>{{ scope.row.closeTime }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column min-width="20px" label="备注">
+        <template slot-scope="scope">
+          <span>{{ scope.row.notes }}</span>
         </template>
       </el-table-column>
 
@@ -259,14 +276,14 @@
     <!-- 页码 -->
     <div class="pagination-container">
       <el-pagination
-        background
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="listQuery.page"
-        :page-sizes="[10,20,30,50]"
-        :page-size="listQuery.limit"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="total">
+          background
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="listQuery.page"
+          :page-sizes="[10,20,30,50]"
+          :page-size="listQuery.limit"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total">
       </el-pagination>
     </div>
 
@@ -330,14 +347,14 @@
 
 
       <el-table
-        :key='tableKey'
-        :data="accountLogList"
-        element-loading-text="拼命加载中"
-        border
-        fit
-        highlight-current-row
-        style="width: 100%"
-        max-height="70%">
+          :key='tableKey'
+          :data="accountLogList"
+          element-loading-text="拼命加载中"
+          border
+          fit
+          highlight-current-row
+          style="width: 100%"
+          max-height="70%">
         <el-table-column min-width="80px" label="createtime" prop="createtime">
           <template slot-scope="scope">
             <span>{{paresDate(new Date(scope.row.createTime))}}</span>
@@ -644,7 +661,7 @@ export default {
     },
     queryLogInfo(){
       queryAccountLog(this.logQuery).then(response =>{
-         this.accountLogList = response.data
+        this.accountLogList = response.data
       })
     },
     closeVisible(type,row){
@@ -664,10 +681,10 @@ export default {
           break;
         case 1:
           str = '封号'
-              break;
+          break;
         case 2:
           str = '弃用'
-              break;
+          break;
       }
       return str
     },
