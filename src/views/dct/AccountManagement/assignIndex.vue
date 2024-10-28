@@ -157,7 +157,7 @@
           <span class="link-type" >{{ scope.row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column width=150px align="center" :label="$t('table.date')">
+      <el-table-column width=150px align="center" :label="$t('table.date')" sortable prop="createTime">
         <template slot-scope="scope">
           <span>{{ new Date(scope.row.createTime).getTime() | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>

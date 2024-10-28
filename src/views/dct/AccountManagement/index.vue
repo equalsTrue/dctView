@@ -355,7 +355,7 @@
           highlight-current-row
           style="width: 100%"
           max-height="70%">
-        <el-table-column min-width="80px" label="createtime" prop="createtime">
+        <el-table-column min-width="80px" label="createtime" sortable prop="createTime">
           <template slot-scope="scope">
             <span>{{paresDate(new Date(scope.row.createTime))}}</span>
           </template>

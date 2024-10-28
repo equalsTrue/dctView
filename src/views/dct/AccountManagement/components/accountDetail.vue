@@ -244,7 +244,11 @@ export default {
             type: 'success',
             duration: 2000
           })
-          this.$router.push({path: '/dct/AccountManagement/assignIndex'})
+          if(this.formData.id !== ''){
+            this.$router.push({path: '/dct/AccountManagement/index'})
+          }else {
+            this.$router.push({path: '/dct/AccountManagement/assignIndex'})
+          }
         } else {
           this.$notify({
             title: '失败',
