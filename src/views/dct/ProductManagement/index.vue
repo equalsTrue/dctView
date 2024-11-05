@@ -112,7 +112,7 @@
         <el-button v-waves class="filter-item" style="margin-left: 1%;margin-top: 1%" type="warning" icon="el-icon-message"
                    @click="handleToApply">批量申请</el-button>
 
-        <el-button v-waves class="filter-item" style="margin-left: 1%;margin-top: 1%" type="success" icon="el-icon-check"
+        <el-button v-waves class="filter-item" style="margin-left: 1%;margin-top: 1%" type="success" icon="el-icon-check" v-if="checkInOperator('approve')"
                    @click="handleToApprove">批量审批
         </el-button>
 
@@ -186,10 +186,10 @@
       <el-table-column :min-width="calculateWidth" label="申请数量" column-key="applyCount">
         <template slot-scope="scope">
           <span v-if="!scope.row.inputCountVisible">{{ scope.row.applyCount }}</span>
-          <div v-if="scope.row.inputCountVisible && checkInOperator('applyCount')" >
+          <div v-if="scope.row.inputCountVisible " >
             <el-dialog
                 title="申请样品数量"
-                :visible.sync="scope.row.inputCountVisible && checkInOperator('applyCount')"
+                :visible.sync="scope.row.inputCountVisible"
                 width="30%">
               <el-input-number placeholder="请输入申请数量" v-model="scope.row.applyCount"  :step="1" :min="0" >
               </el-input-number>
@@ -227,10 +227,10 @@
       <el-table-column :min-width="calculateWidth" label="状态" column-key="status">
         <template slot-scope="scope">
           <span v-if="!scope.row.inputStatusVisible" :style=chooseColor(scope.row.status)>{{ handleStatus(scope.row.status) }}</span>
-          <div v-if="scope.row.inputStatusVisible && checkInOperator('status')" style="width: 30px">
+          <div v-if="scope.row.inputStatusVisible " style="width: 30px">
             <el-dialog
                 title="更新状态"
-                :visible.sync="scope.row.inputStatusVisible && checkInOperator('status')"
+                :visible.sync="scope.row.inputStatusVisible "
                 width="30%">
 
               <el-select v-model="scope.row.status" filterable clearable placeholder="请选择状态">
@@ -253,10 +253,10 @@
       <el-table-column :min-width="calculateWidth" label="使用人" column-key="user">
         <template slot-scope="scope">
           <span v-if="!scope.row.inputUserVisible">{{ scope.row.user }}</span>
-          <div v-if="scope.row.inputUserVisible && checkInOperator('user')" style="width: 30px">
+          <div v-if="scope.row.inputUserVisible " style="width: 30px">
             <el-dialog
                 title="更新使用人"
-                :visible.sync="scope.row.inputUserVisible && checkInOperator('user')"
+                :visible.sync="scope.row.inputUserVisible "
                 width="30%">
 
               <el-select v-model="scope.row.user" filterable clearable placeholder="请选择使用人">
@@ -289,10 +289,10 @@
       <el-table-column :min-width="calculateWidth" label="申请人" column-key="applyUser">
         <template slot-scope="scope">
           <span v-if="!scope.row.inputApplyUserVisible">{{ scope.row.applyUser }}</span>
-          <div v-if="scope.row.inputApplyUserVisible && checkInOperator('applyUser')" style="width: 30px">
+          <div v-if="scope.row.inputApplyUserVisible " style="width: 30px">
             <el-dialog
                 title="更新申请人"
-                :visible.sync="scope.row.inputApplyUserVisible && checkInOperator('applyUser')"
+                :visible.sync="scope.row.inputApplyUserVisible"
                 width="30%">
 
               <el-select v-model="scope.row.applyUser" filterable clearable placeholder="请选择使用人">
@@ -505,9 +505,19 @@ export default {
       }).catch(err => {
         console.log(err)
       })
+      debugger
       this.operator = this.$route.meta.operator
-      this.operator = 'all'
     },
+
+    checkInOperator(operator){
+      debugger
+      if(this.operator.indexOf(operator) > -1 || this.operator.indexOf('all') > -1){
+        return  true
+      }else {
+        return false
+      }
+    },
+
     paresDate(time) {
       return moment(time).format('YYYY-MM-DD HH:mm:ss')
     },
@@ -684,17 +694,17 @@ export default {
     },
     handleCellDoubleClick(row, column, cell, event) {
       debugger
-      if (column.columnKey === 'applyCount' && this.checkInOperator('applyCount')) {
+      if (column.columnKey === 'applyCount') {
         row.inputCountVisible = true
       }
-      if(column.columnKey === 'status' && this.checkInOperator('status')){
+      if(column.columnKey === 'status' ){
         row.inputStatusVisible = true
 
       }
-      if(column.columnKey === 'applyUser' && this.checkInOperator('applyUser')){
+      if(column.columnKey === 'applyUser'){
         row.inputApplyUserVisible = true
       }
-      if(column.columnKey=== 'user' && this.checkInOperator('user')){
+      if(column.columnKey=== 'user'){
         row.inputUserVisible = true
       }
     },
@@ -722,13 +732,6 @@ export default {
           this.$message.error("审批失败")
         }
       })
-    },
-    checkInOperator(operator){
-      if(this.operator.indexOf(operator) > -1 || this.operator.indexOf('all') > -1){
-        return  true
-      }else {
-        return false
-      }
     },
     // 修改筛选添加后重新加载列表数据
     handleFilter() {
