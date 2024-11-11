@@ -709,7 +709,8 @@ export default {
       }
     },
     handleToApply(){
-      batchApplyProduct(this.multipleSelection).then(response =>{
+      const info = {"batchApply":this.multipleSelection}
+      batchApplyProduct(info).then(response =>{
         if(response.data == 'success'){
           this.getList()
           this.$message.success("批量申请成功")

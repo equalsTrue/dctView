@@ -57,11 +57,11 @@ export function approveProduct(query) {
     })
 }
 
-export function batchApplyProduct(query) {
+export function batchApplyProduct(param) {
     return request({
         url: '/dct/product/batch/apply',
         method: 'post',
-        data: query
+        data: param
     })
 }
 
