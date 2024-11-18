@@ -168,6 +168,13 @@ export function fetchCreatorGmvParams(user){
     })
 }
 
+export function selectUserByGroup(userGroup){
+    return request({
+        url: '/dct/gmv/creator/user?group=' + userGroup,
+        method: 'get'
+    })
+}
+
 export function fetchPerCreatorList(params){
     return request({
         url: '/dct/gmv/single/creator',

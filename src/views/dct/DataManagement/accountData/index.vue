@@ -5,7 +5,8 @@
       <el-row>
 
 
-        <el-select v-model="listQuery.account" style="margin-left: 20px" multiple collapse-tags  filterable clearable reserve-keyword placeholder="账号">
+        <el-select v-model="listQuery.account" style="margin-left: 20px" multiple collapse-tags filterable clearable
+                   reserve-keyword placeholder="账号">
           <el-option
               v-for="item in accountList"
               :key="item"
@@ -18,7 +19,8 @@
           </el-option>
         </el-select>
 
-        <el-select v-model="listQuery.creator_type" style="margin-left: 20px" multiple collapse-tags  filterable clearable reserve-keyword placeholder="creator类型">
+        <el-select v-model="listQuery.creator_type" style="margin-left: 20px" multiple collapse-tags filterable
+                   clearable reserve-keyword placeholder="creator类型">
           <el-option
               v-for="item in creatorTypes"
               :key="item.label"
@@ -31,7 +33,8 @@
           </el-option>
         </el-select>
 
-        <el-select v-model="listQuery.creator" style="margin-left: 20px" multiple collapse-tags  filterable clearable reserve-keyword placeholder="Handle">
+        <el-select v-model="listQuery.creator" style="margin-left: 20px" multiple collapse-tags filterable clearable
+                   reserve-keyword placeholder="Handle">
           <el-option
               v-for="item in creatorList"
               :key="item"
@@ -45,7 +48,8 @@
         </el-select>
 
 
-        <el-select v-model="listQuery.user" style="margin-left: 20px" multiple collapse-tags filterable clearable reserve-keyword placeholder="管理人">
+        <el-select v-model="listQuery.user" style="margin-left: 20px" multiple collapse-tags filterable clearable
+                   reserve-keyword placeholder="管理人">
           <el-option
               v-for="item in userList"
               :key="item"
@@ -59,7 +63,8 @@
         </el-select>
 
 
-        <el-select v-model="listQuery.userGroup" style="margin-left: 20px" multiple collapse-tags filterable clearable reserve-keyword placeholder="组别">
+        <el-select v-model="listQuery.userGroup" style="margin-left: 20px" multiple collapse-tags filterable clearable
+                   reserve-keyword placeholder="组别" @change="selectUser">
           <el-option
               v-for="item in userGroupList"
               :key="item"
@@ -72,7 +77,8 @@
           </el-option>
         </el-select>
 
-        <el-select v-model="listQuery.country" style="margin-left: 20px" multiple collapse-tags filterable clearable reserve-keyword placeholder="国家">
+        <el-select v-model="listQuery.country" style="margin-left: 20px" multiple collapse-tags filterable clearable
+                   reserve-keyword placeholder="国家">
           <el-option
               v-for="item in countryList"
               :key="item.value"
@@ -83,8 +89,8 @@
         </el-select>
 
 
-
-        <el-select v-model="listQuery.status" style="margin-left: 20px" multiple collapse-tags filterable clearable reserve-keyword placeholder="状态">
+        <el-select v-model="listQuery.status" style="margin-left: 20px" multiple collapse-tags filterable clearable
+                   reserve-keyword placeholder="状态">
           <el-option
               v-for="item in statusList"
               :key="item.value"
@@ -93,7 +99,6 @@
             <span style="float: left">{{ item.label }}</span>
           </el-option>
         </el-select>
-
 
 
       </el-row>
@@ -117,15 +122,17 @@
         </el-date-picker>
 
 
-        <el-button v-if="!listLoading" v-waves class="filter-item" type="info" icon="el-icon-search" style="margin-left: 2%"
+        <el-button v-if="!listLoading" v-waves class="filter-item" type="info" icon="el-icon-search"
+                   style="margin-left: 2%"
                    @click="handleFilter">{{ $t('table.search') }}
         </el-button>
 
-        <el-button v-if="!listLoading" v-waves class="filter-item" type="success" icon="el-icon-search" style="margin-left: 1%"
+        <el-button v-if="!listLoading" v-waves class="filter-item" type="success" icon="el-icon-search"
+                   style="margin-left: 1%"
                    @click="handleFilterByDay">按天查询
         </el-button>
 
-        <el-button  v-waves class="filter-item" type="warning" @click="chooseSubmitFiles()" style="margin-left: 1%">
+        <el-button v-waves class="filter-item" type="warning" @click="chooseSubmitFiles()" style="margin-left: 1%">
           选取上传文件
         </el-button>
 
@@ -133,8 +140,8 @@
         <el-button v-waves class="filter-item" style="margin-left: 1%;" type="primary" @click="submitUpload">上传到服务器
         </el-button>
 
-        <el-button   v-waves class="filter-item" type="danger" @click="handleDownload"
-                     style="margin-left: 1%;background-color: purple">导出查询数据
+        <el-button v-waves class="filter-item" type="danger" @click="handleDownload"
+                   style="margin-left: 1%;background-color: purple">导出查询数据
         </el-button>
 
         <!-- 添加按钮 -->
@@ -168,7 +175,6 @@
                 <input type="file" id="fileId" ref="fileId" title @change="upLoadVidFile($event,index)"/>
               </el-form-item>
             </el-col>
-
 
 
           </el-row>
@@ -272,7 +278,7 @@
 
       <el-table-column :min-width="calculateWidth" align="center" :label="$t('table.date')" sortable prop="date">
         <template slot-scope="scope">
-          <span>{{ scope.row.date}}</span>
+          <span>{{ scope.row.date }}</span>
         </template>
       </el-table-column>
 
@@ -285,20 +291,16 @@
 
       <el-table-column :min-width="calculateWidth" label="头像" prop="profile_picture" column-key="creatorPicture">
         <template slot-scope="scope">
-          <img :src="scope.row.creatorPicture" height="50%" width="50%" >
+          <img :src="scope.row.creatorPicture" height="50%" width="50%">
         </template>
       </el-table-column>
 
 
-      <el-table-column :min-width="calculateWidth" label="Handle" column-key="creator" prop="creator" >
+      <el-table-column :min-width="calculateWidth" label="Handle" column-key="creator" prop="creator">
         <template slot-scope="scope">
           <el-link type="primary">{{ scope.row.creator }}</el-link>
         </template>
       </el-table-column>
-
-
-
-
 
 
       <el-table-column :min-width="calculateWidth" label="归属人" prop="belong_person" column-key="belong_person">
@@ -323,33 +325,35 @@
       </el-table-column>
 
 
-
-
       <el-table-column :min-width="calculateWidth" label="GMV" sortable prop="gmv">
         <template slot-scope="scope">
           <span>{{ parseFloat(scope.row.gmv).toFixed(3) }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column :min-width="calculateWidth" label="预估Creator佣金" sortable prop="estimated_creator_commission" column-key="creator_commission">
+      <el-table-column :min-width="calculateWidth" label="预估Creator佣金" sortable prop="estimated_creator_commission"
+                       column-key="creator_commission">
         <template slot-scope="scope">
           <span>{{ parseFloat(scope.row.estimated_creator_commission).toFixed(3) }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column :min-width="calculateWidth" label="Creator佣金" sortable prop="creator_commission" column-key="creator_commission">
+      <el-table-column :min-width="calculateWidth" label="Creator佣金" sortable prop="creator_commission"
+                       column-key="creator_commission">
         <template slot-scope="scope">
           <span>{{ parseFloat(scope.row.creator_commission).toFixed(3) }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column :min-width="calculateWidth" label="预估Partner佣金" sortable prop="estimated_partner_commission" column-key="partner_commission">
+      <el-table-column :min-width="calculateWidth" label="预估Partner佣金" sortable prop="estimated_partner_commission"
+                       column-key="partner_commission">
         <template slot-scope="scope">
           <span>{{ parseFloat(scope.row.estimated_partner_commission).toFixed(3) }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column :min-width="calculateWidth" label="Partner佣金" sortable prop="partner_commission" column-key="partner_commission">
+      <el-table-column :min-width="calculateWidth" label="Partner佣金" sortable prop="partner_commission"
+                       column-key="partner_commission">
         <template slot-scope="scope">
           <span>{{ parseFloat(scope.row.partner_commission).toFixed(3) }}</span>
         </template>
@@ -368,15 +372,12 @@
       </el-table-column>
 
 
-      <el-table-column :min-width="calculateWidth" sortable label="总播放量" prop="video_views" column-key="video_views">
+      <el-table-column :min-width="calculateWidth" sortable label="总播放量" prop="video_views"
+                       column-key="video_views">
         <template slot-scope="scope">
           <span>{{ scope.row.video_views }}</span>
         </template>
       </el-table-column>
-
-
-
-
 
 
     </el-table>
@@ -396,14 +397,13 @@
     </div>
 
 
-
   </div>
 </template>
 
 
 <script>
 // 数据接口
-import {fetchProductGmvList ,fetchCreatorGmvParams} from '@/api/dct'
+import {fetchProductGmvList, fetchCreatorGmvParams, selectUserByGroup} from '@/api/dct'
 // 按钮动画特效 - 水波纹指令
 import waves from '@/directive/waves'
 import {parseTime} from '@/utils'
@@ -439,12 +439,12 @@ export default {
       ],
       // 表格的key，改变后表格会重新渲染
       tableKey: 0,
-      chooseMetricsList:[],
-      chooseGroupList:[],
+      chooseMetricsList: [],
+      chooseGroupList: [],
       // 列表数据集
       list: null,
-      operator:'',
-      groupbyDay:false,
+      operator: '',
+      groupbyDay: false,
       // 列表数据总计
       total: null,
       user: '',
@@ -453,23 +453,23 @@ export default {
       shopLogList: [],
       // 列表请求条件，既给接口传递的参数
       listQuery: {
-        account:[],
-        creator_type:[],
-        creator:[],
-        country:[],
-        status:[],
-        user:[],
-        userGroup:[],
+        account: [],
+        creator_type: [],
+        creator: [],
+        country: [],
+        status: [],
+        user: [],
+        userGroup: [],
         time: [
           this.formatDateToday() + ' 00:00:00',
           this.formatDateToday() + ' 23:59:59'
         ],
-        limit:10,
-        page:1
+        limit: 10,
+        page: 1
       },
       dialogFileVisible: false,
       dialogLog: false,
-      accountLogList:[],
+      accountLogList: [],
       dateRange: [
         new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 7, 0, 0, 0),
         new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0)
@@ -528,25 +528,25 @@ export default {
       },
       // 选项框加载状态
       loading: false,
-      submitList:[],
-      accountList:['starp','vista'],
+      submitList: [],
+      accountList: ['starp', 'vista'],
       // 列表头部的筛选条件
       statusList: [
         {label: '正常', value: 0},
         {label: '封号', value: 1},
         {label: '弃用', value: 2}
       ],
-      creatorTypes:[
+      creatorTypes: [
         {label: '自有账号', value: 0},
         {label: '其他账号', value: 1}
       ],
-      groupList:[],
+      groupList: [],
       // 列表头部的筛选条件
       uidList: [],
-      userList:[],
-      creatorList:[],
-      userGroupList:[],
-      countryList:[
+      userList: [],
+      creatorList: [],
+      userGroupList: [],
+      countryList: [
         {label: '美国', value: 'us'},
         {label: '英国', value: 'uk'}
       ],
@@ -579,7 +579,29 @@ export default {
       })
     },
 
+    selectUser() {
+      if (this.listQuery.userGroup != null && this.listQuery.userGroup.length > 0) {
+        selectUserByGroup(this.listQuery.userGroup).then(response => {
+          if (response.data.user != null && response.data.user.length > 0) {
+            this.userList = response.data.user
+          }
+          if (response.data.creator != null && response.data.creator.length > 0) {
+            this.creatorList = response.data.creator
+          }
+        }).catch(err => {
+          console.log()
+        })
+      } else {
+        fetchCreatorGmvParams(this.user).then(response => {
+          this.userList = response.data.user
+          this.creatorList = response.data.creator
+          this.userGroupList = response.data.userGroup
+        }).catch(err => {
+          console.log(err)
+        })
+      }
 
+    },
     upLoadGmvFile(e, index) {
       var file = e.target.files[0];
       var form = {};
@@ -640,7 +662,7 @@ export default {
     paresDate(time) {
       return moment(time).format('YYYY-MM-DD HH:mm:ss')
     },
-    handleCanceledit (row) {
+    handleCanceledit(row) {
       row.status = false
     },
     // 获取列表数据
@@ -650,12 +672,17 @@ export default {
         this.$store.state.tagsView.visitedViews[index].query = Object.assign({}, this.listQuery)
       }
       this.listLoading = false
-      this.chooseMetricsList = ['creator','country','gmv','videos','video_views','estimated_creator_commission','creator_commission','estimated_partner_commission','partner_commission']
-      if(this.chooseGroupList.indexOf("day") >= 0){
+      this.chooseMetricsList = ['creator', 'country', 'gmv', 'videos', 'video_views', 'estimated_creator_commission', 'creator_commission', 'estimated_partner_commission', 'partner_commission']
+      if (this.chooseGroupList.indexOf("day") >= 0) {
         this.chooseMetricsList.push("date")
       }
-      let params = {pageFilterVo: this.listQuery, pageMetricsVo: this.chooseMetricsList, pageGroupVo: this.chooseGroupList, pageVO: {limit: this.limit, page: this.page, sortColumn: this.sortColumn, sortType: this.sortType}}
-      fetchProductGmvList(params,this.user).then(response => {
+      let params = {
+        pageFilterVo: this.listQuery,
+        pageMetricsVo: this.chooseMetricsList,
+        pageGroupVo: this.chooseGroupList,
+        pageVO: {limit: this.limit, page: this.page, sortColumn: this.sortColumn, sortType: this.sortType}
+      }
+      fetchProductGmvList(params, this.user).then(response => {
         this.listLoading = false
         this.list = response.data.pageVO.list
       }).catch(() => {
@@ -664,20 +691,20 @@ export default {
 
     handleSizeChange(val) {
       this.listQuery.limit = val
-      if(this.groupbyDay){
-        this.chooseGroupList = ['creator','country','day']
-      }else {
-        this.chooseGroupList = ['creator','country']
+      if (this.groupbyDay) {
+        this.chooseGroupList = ['creator', 'country', 'day']
+      } else {
+        this.chooseGroupList = ['creator', 'country']
       }
       this.getList()
     },
     // 页码修改后重新加载
     handleCurrentChange(val) {
       this.listQuery.page = val
-      if(this.groupbyDay){
-        this.chooseGroupList = ['creator','country','day']
-      }else {
-        this.chooseGroupList = ['creator','country']
+      if (this.groupbyDay) {
+        this.chooseGroupList = ['creator', 'country', 'day']
+      } else {
+        this.chooseGroupList = ['creator', 'country']
       }
       this.getList()
     },
@@ -692,7 +719,7 @@ export default {
       const sumsModel = {}
       dataProperties.forEach((property, index) => {
         if (property == 'date' || property == 'creator' || property == 'belong_person'
-            || property == 'userGroup' || property == 'index' || property ==  'profile_picture' || property == 'country' || property == 'belong_pserson') {
+            || property == 'userGroup' || property == 'index' || property == 'profile_picture' || property == 'country' || property == 'belong_pserson') {
           return '———'
         }
         // 字符转为数据
@@ -716,14 +743,14 @@ export default {
           sums[index] = '合计'
           return
         }
-        if(column.property == 'index' || column.property == 'creator'
-            || column.property == 'user' || column.property == 'userGroup' || column.property == 'profile_picture'){
+        if (column.property == 'index' || column.property == 'creator'
+            || column.property == 'user' || column.property == 'userGroup' || column.property == 'profile_picture') {
           sums[index] == '--'
           return;
         }
-        if (dataProperties.indexOf(column.property) >= 0 && (column.property == 'gmv' ||column.property == 'commission' || column.property == 'creator_commission' || column.property == 'partner_commission')){
+        if (dataProperties.indexOf(column.property) >= 0 && (column.property == 'gmv' || column.property == 'commission' || column.property == 'creator_commission' || column.property == 'partner_commission')) {
           sums[index] = parseFloat(sumsModel[column.property]).toFixed(2)
-        }else if(column.property == 'date'){
+        } else if (column.property == 'date') {
           sums[index] = this.list.length
         } else {
           sums[index] = sumsModel[column.property]
@@ -734,8 +761,8 @@ export default {
       return sums
     },
 
-    calculateWidth(){
-      let width = parseFloat(100/10).toFixed(2) + "%"
+    calculateWidth() {
+      let width = parseFloat(100 / 10).toFixed(2) + "%"
       return width
     },
 
@@ -762,25 +789,25 @@ export default {
           .catch(_ => {
           });
     },
-    handleCountry(str){
-      if(str == 'us'){
+    handleCountry(str) {
+      if (str == 'us') {
         return '美国'
-      }else {
-        return  '英国'
+      } else {
+        return '英国'
       }
     },
-    closeVisible(type,row){
+    closeVisible(type, row) {
 
-      if(type === 'belongPerson'){
+      if (type === 'belongPerson') {
         row.inputUserVisible = false
       }
-      if(type === 'status'){
+      if (type === 'status') {
         row.inputStatusVisible = false
       }
     },
-    handleStatus(status){
+    handleStatus(status) {
       let str
-      switch (status){
+      switch (status) {
         case 0:
           str = '正常'
           break;
@@ -795,23 +822,23 @@ export default {
     },
     handleCellDoubleClick(row, column, cell, event) {
       let time = row.date
-      if(time == 'total'){
+      if (time == 'total') {
         time = this.listQuery.time[0] + ',' + this.listQuery.time[1]
       }
-      if(column.columnKey === 'creator'){
+      if (column.columnKey === 'creator') {
         this.$router.push({path: '/dct/DataManagement/accountData/creatorIndex?creator=' + row.creator + '&time=' + time})
       }
-      if(column.columnKey=== 'videos') {
-        this.$router.push({path: '/dct/DataManagement/accountData/videoIndex?creator=' + row.creator + '&time='+ time})
+      if (column.columnKey === 'videos') {
+        this.$router.push({path: '/dct/DataManagement/accountData/videoIndex?creator=' + row.creator + '&time=' + time})
       }
-      if(column.columnKey === 'addVideos'){
-        this.$router.push({path: '/dct/DataManagement/accountData/videoIndex?creator=' + row.creator + '&postTime='+ time})
+      if (column.columnKey === 'addVideos') {
+        this.$router.push({path: '/dct/DataManagement/accountData/videoIndex?creator=' + row.creator + '&postTime=' + time})
       }
     },
-    checkInOperator(operator){
-      if(this.operator.indexOf(operator) > -1 || this.operator.indexOf('all') > -1){
-        return  true
-      }else {
+    checkInOperator(operator) {
+      if (this.operator.indexOf(operator) > -1 || this.operator.indexOf('all') > -1) {
+        return true
+      } else {
         return false
       }
     },
@@ -848,11 +875,11 @@ export default {
     },
     // 修改筛选添加后重新加载列表数据
     handleFilter() {
-      this.chooseGroupList = ['creator','country']
+      this.chooseGroupList = ['creator', 'country']
       this.getList()
     },
-    handleFilterByDay(){
-      this.chooseGroupList = ['day','creator','country']
+    handleFilterByDay() {
+      this.chooseGroupList = ['day', 'creator', 'country']
       this.groupbyDay = true
       this.getList()
     },
@@ -885,9 +912,9 @@ export default {
       this.downloadLoading = true
       import('@/vendor/Export2Excel').then(excel => {
         // 设置导出列
-        const filterVal = ['date','index','profile_picture','creator','belong_person', 'userGroup', 'country', 'gmv', 'creator_commission','partner_commission','videos','video_views','addViews']
+        const filterVal = ['date', 'index', 'profile_picture', 'creator', 'belong_person', 'userGroup', 'country', 'gmv', 'creator_commission', 'partner_commission', 'videos', 'video_views', 'addViews']
         // 设置对应数据
-        const tHeader = ['时间','排名','头像','Handle','归属人', '组别', '国家', 'GMV', 'creator佣金','partner佣金','视频数量','视频总播放量','新增视频数量']
+        const tHeader = ['时间', '排名', '头像', 'Handle', '归属人', '组别', '国家', 'GMV', 'creator佣金', 'partner佣金', '视频数量', '视频总播放量', '新增视频数量']
         var list = []
         this.list.forEach((item, index) => {
           list.push(item)
@@ -908,9 +935,9 @@ export default {
     },
     formatJson(filterVal, jsonData) {
       return jsonData.map(v => filterVal.map(j => {
-        if(j.indexOf("country") > 0){
+        if (j.indexOf("country") > 0) {
           return this.handleCountry(v[j])
-        }else {
+        } else {
           return v[j]
         }
       }))

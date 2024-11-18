@@ -4,7 +4,8 @@
     <div class="filter-container">
       <el-row>
 
-        <el-select v-model="listQuery.creator" style="margin-left: 20px" multiple collapse-tags  filterable clearable reserve-keyword placeholder="Handle">
+        <el-select v-model="listQuery.creator" style="margin-left: 20px" multiple collapse-tags filterable clearable
+                   reserve-keyword placeholder="Handle">
           <el-option
               v-for="item in creatorList"
               :key="item"
@@ -17,7 +18,8 @@
           </el-option>
         </el-select>
 
-        <el-select v-model="listQuery.uid"  style="margin-left: 20px" multiple collapse-tags filterable clearable reserve-keyword placeholder="UID">
+        <el-select v-model="listQuery.uid" style="margin-left: 20px" multiple collapse-tags filterable clearable
+                   reserve-keyword placeholder="UID">
           <el-option
               v-for="item in uidList"
               :key="item"
@@ -30,7 +32,8 @@
           </el-option>
         </el-select>
 
-        <el-select v-model="listQuery.belongPerson" style="margin-left: 20px" multiple collapse-tags filterable clearable reserve-keyword placeholder="归属人">
+        <el-select v-model="listQuery.belongPerson" style="margin-left: 20px" multiple collapse-tags filterable
+                   clearable reserve-keyword placeholder="归属人">
           <el-option
               v-for="item in userList"
               :key="item"
@@ -44,7 +47,8 @@
         </el-select>
 
 
-        <el-select v-model="listQuery.userGroup" style="margin-left: 20px" multiple collapse-tags filterable clearable reserve-keyword placeholder="组别">
+        <el-select v-model="listQuery.userGroup" style="margin-left: 20px" multiple collapse-tags filterable clearable
+                   reserve-keyword placeholder="组别">
           <el-option
               v-for="item in userGroupList"
               :key="item"
@@ -57,7 +61,8 @@
           </el-option>
         </el-select>
 
-        <el-select v-model="listQuery.country" style="margin-left: 20px" multiple collapse-tags filterable clearable reserve-keyword placeholder="国家">
+        <el-select v-model="listQuery.country" style="margin-left: 20px" multiple collapse-tags filterable clearable
+                   reserve-keyword placeholder="国家">
           <el-option
               v-for="item in countryList"
               :key="item.value"
@@ -68,8 +73,8 @@
         </el-select>
 
 
-
-        <el-select v-model="listQuery.status" style="margin-left: 20px" multiple collapse-tags filterable clearable reserve-keyword placeholder="状态">
+        <el-select v-model="listQuery.status" style="margin-left: 20px" multiple collapse-tags filterable clearable
+                   reserve-keyword placeholder="状态">
           <el-option
               v-for="item in statusList"
               :key="item.value"
@@ -80,31 +85,22 @@
         </el-select>
 
 
-
-
-
-
-
-
-
-
-
       </el-row>
 
       <el-row style="margin-top: 20px">
         <!-- 搜索按钮 -->
 
 
-
-        <el-button v-if="!listLoading" v-waves class="filter-item" type="info" icon="el-icon-search" style="margin-left: 5%"
+        <el-button v-if="!listLoading" v-waves class="filter-item" type="info" icon="el-icon-search"
+                   style="margin-left: 5%"
                    @click="handleFilter">{{ $t('table.search') }}
         </el-button>
         <el-button v-else class="filter-item" type="primary" icon="el-icon-loading">Loading</el-button>
         <!-- 添加按钮 -->
 
         <el-button v-waves class="filter-item" style="margin-left: 10px;" type="warning" icon="el-icon-message"
-                   @click="queryLog">查询日志</el-button>
-
+                   @click="queryLog">查询日志
+        </el-button>
 
 
         <!-- 表格导出 -->
@@ -138,7 +134,7 @@
 
       <el-table-column v-if="showId" :label="$t('table.identification')" width=200 align="center">
         <template slot-scope="scope">
-          <span class="link-type" >{{ scope.row.id }}</span>
+          <span class="link-type">{{ scope.row.id }}</span>
         </template>
       </el-table-column>
       <el-table-column width=150px align="center" :label="$t('table.date')">
@@ -152,7 +148,6 @@
           <span>{{ scope.row.creator }}</span>
         </template>
       </el-table-column>
-
 
 
       <el-table-column min-width="20px" label="UID">
@@ -182,8 +177,13 @@
                 </el-option>
               </el-select>
 
-              <el-button type="primary" style="margin-left: 5%" plain size="mini" :key="scope.row.id + '-Status-selector-confirm'" @click="handleSelectConfirm(scope.row,'belongPerson')">{{$t('table.confirm')}}</el-button>
-              <el-button type="warning" plain size="mini" :key="scope.row.id + '-Status-selector-cancel'" @click="scope.row.inputUserVisible = false">{{$t('table.cancel')}}</el-button>
+              <el-button type="primary" style="margin-left: 5%" plain size="mini"
+                         :key="scope.row.id + '-Status-selector-confirm'"
+                         @click="handleSelectConfirm(scope.row,'belongPerson')">{{ $t('table.confirm') }}
+              </el-button>
+              <el-button type="warning" plain size="mini" :key="scope.row.id + '-Status-selector-cancel'"
+                         @click="scope.row.inputUserVisible = false">{{ $t('table.cancel') }}
+              </el-button>
 
             </el-dialog>
           </div>
@@ -210,15 +210,38 @@
         </template>
       </el-table-column>
 
-      <el-table-column min-width="20px" label="类目">
+      <el-table-column min-width="20px" label="类目" column-key="category">
         <template slot-scope="scope">
-          <span>{{ scope.row.category }}</span>
+          <span v-if="!scope.row.inputCategoryVisible">{{ scope.row.category }}</span>
+          <div v-if="scope.row.inputCategoryVisible && checkInOperator('category')" style="width: 30px">
+            <el-dialog
+                title="更新类目"
+                :visible.sync="scope.row.inputCategoryVisible && checkInOperator('category')"
+                width="30%"
+                :modal-append-to-body="false">
+
+              <el-input
+                  placeholder="请输入类目"
+                  v-model="scope.row.category"
+                  clearable>
+              </el-input>
+
+              <el-button type="primary" style="margin-left: 1%;margin-top: 3%" plain size="mini"
+                         :key="scope.row.id + '-Status-selector-confirm'"
+                         @click="handleSelectConfirm(scope.row,'category')">{{ $t('table.confirm') }}
+              </el-button>
+              <el-button type="warning" plain size="mini" :key="scope.row.id + '-Status-selector-cancel'"
+                         @click="scope.row.inputCategoryVisible = false">{{ $t('table.cancel') }}
+              </el-button>
+
+            </el-dialog>
+          </div>
         </template>
       </el-table-column>
 
       <el-table-column min-width="20px" label="状态" column-key="status">
         <template slot-scope="scope">
-          <span v-if="!scope.row.inputStatusVisible" >{{ handleStatus(scope.row.status) }}</span>
+          <span v-if="!scope.row.inputStatusVisible">{{ handleStatus(scope.row.status) }}</span>
           <div v-if="scope.row.inputStatusVisible && checkInOperator('update')" style="width: 30px">
             <el-dialog
                 title="更新状态"
@@ -236,11 +259,17 @@
                 </el-option>
               </el-select>
 
-              <el-button type="primary" style="margin-left: 5%" plain size="mini" :key="scope.row.id + '-Status-selector-confirm'" @click="handleSelectConfirm(scope.row,'status')">{{$t('table.confirm')}}</el-button>
-              <el-button type="warning" plain size="mini" :key="scope.row.id + '-Status-selector-cancel'" @click="scope.row.inputStatusVisible = false">{{$t('table.cancel')}}</el-button>
+              <el-button type="primary" style="margin-left: 5%" plain size="mini"
+                         :key="scope.row.id + '-Status-selector-confirm'"
+                         @click="handleSelectConfirm(scope.row,'status')">{{ $t('table.confirm') }}
+              </el-button>
+              <el-button type="warning" plain size="mini" :key="scope.row.id + '-Status-selector-cancel'"
+                         @click="scope.row.inputStatusVisible = false">{{ $t('table.cancel') }}
+              </el-button>
 
             </el-dialog>
-          </div>        </template>
+          </div>
+        </template>
       </el-table-column>
 
 
@@ -256,18 +285,46 @@
         </template>
       </el-table-column>
 
-      <el-table-column min-width="20px" label="备注">
+      <el-table-column min-width="20px" label="备注" column-key="notes">
         <template slot-scope="scope">
-          <span>{{ scope.row.notes }}</span>
+          <span v-if="!scope.row.inputNotesVisible">{{ scope.row.notes }}</span>
+          <div v-if="scope.row.inputNotesVisible && checkInOperator('notes')" style="width: 30px">
+            <el-dialog
+                title="更新备注"
+                :visible.sync="scope.row.inputNotesVisible && checkInOperator('notes')"
+                width="30%"
+                :modal-append-to-body="false">
+
+              <el-input
+                  placeholder="请输入备注"
+                  v-model="scope.row.notes"
+                  clearable>
+              </el-input>
+
+              <el-button type="primary" style="margin-left: 1%;margin-top: 3%" plain size="mini"
+                         :key="scope.row.id + '-Status-selector-confirm'"
+                         @click="handleSelectConfirm(scope.row,'notes')">{{ $t('table.confirm') }}
+              </el-button>
+              <el-button type="warning" plain size="mini" :key="scope.row.id + '-Status-selector-cancel'"
+                         @click="scope.row.inputNotesVisible = false">{{ $t('table.cancel') }}
+              </el-button>
+
+            </el-dialog>
+          </div>
         </template>
       </el-table-column>
 
 
-
-      <el-table-column align="center" :label="$t('table.actions')" width=150 class-name="small-padding fixed-width">
+      <el-table-column align="center" :label="$t('table.actions')" width=150 class-name="small-padding fixed-width"
+                       v-if="checkInOperator('handle')">
         <template slot-scope="scope">
-          <el-button size="mini" type="primary" @click="handleToUpdate(scope.row)" v-if="checkInOperator('update')">{{ $t('table.update') }}</el-button>
-          <el-button size="mini" type="danger" @click="handleToDelete(scope.row.id)">{{ $t('table.delete') }}</el-button>
+          <el-button size="mini" type="primary" @click="handleToUpdate(scope.row)">
+            {{ $t('table.update') }}
+          </el-button>
+          <el-button size="mini" type="danger" @click="handleToDelete(scope.row.id)">{{
+              $t('table.delete')
+            }}
+          </el-button>
           <!--          <el-button size="mini" type="danger" @click="handleDelete(scope.row)">{{ $t('table.delete') }}</el-button>-->
         </template>
       </el-table-column>
@@ -292,7 +349,8 @@
       <div class="filter-container">
 
         <el-row>
-          <el-select v-model="logQuery.creator" style="margin-left: 20px" filterable clearable reserve-keyword placeholder="Handle">
+          <el-select v-model="logQuery.creator" style="margin-left: 20px" filterable clearable reserve-keyword
+                     placeholder="Handle">
             <el-option
                 v-for="item in creatorList"
                 :key="item"
@@ -305,7 +363,8 @@
             </el-option>
           </el-select>
 
-          <el-select v-model="logQuery.uid"  style="margin-left: 20px" filterable clearable reserve-keyword placeholder="UID">
+          <el-select v-model="logQuery.uid" style="margin-left: 20px" filterable clearable reserve-keyword
+                     placeholder="UID">
             <el-option
                 v-for="item in uidList"
                 :key="item"
@@ -335,12 +394,12 @@
               :picker-options="pickerOptions">
           </el-date-picker>
 
-          <el-button v-if="!listLoading" v-waves class="filter-item" type="success" icon="el-icon-search" style="margin-left: 5%"
+          <el-button v-if="!listLoading" v-waves class="filter-item" type="success" icon="el-icon-search"
+                     style="margin-left: 5%"
                      @click="queryLogInfo">{{ $t('table.search') }}
           </el-button>
 
         </el-row>
-
 
 
       </div>
@@ -357,46 +416,45 @@
           max-height="70%">
         <el-table-column min-width="80px" label="createtime" sortable prop="createTime">
           <template slot-scope="scope">
-            <span>{{paresDate(new Date(scope.row.createTime))}}</span>
+            <span>{{ paresDate(new Date(scope.row.createTime)) }}</span>
           </template>
         </el-table-column>
 
         <el-table-column min-width="20px" label="Handle" prop="creator">
           <template slot-scope="scope">
-            <span>{{scope.row.creator}}</span>
+            <span>{{ scope.row.creator }}</span>
           </template>
         </el-table-column>
 
         <el-table-column min-width="30px" label="UID" prop="uid">
           <template slot-scope="scope">
-            <span>{{scope.row.uid}}</span>
+            <span>{{ scope.row.uid }}</span>
           </template>
         </el-table-column>
 
         <el-table-column min-width="20px" label="前归属人" prop="beforePerson">
           <template slot-scope="scope">
-            <span>{{scope.row.beforePerson}}</span>
+            <span>{{ scope.row.beforePerson }}</span>
           </template>
         </el-table-column>
 
         <el-table-column min-width="20px" label="现归属人" prop="localPerson">
           <template slot-scope="scope">
-            <span>{{scope.row.localPerson}}</span>
+            <span>{{ scope.row.localPerson }}</span>
           </template>
         </el-table-column>
 
 
         <el-table-column min-width="20px" label="前状态" prop="beforeStatus">
           <template slot-scope="scope">
-            <span>{{handleStatus(scope.row.beforeStatus)}}</span>
+            <span>{{ handleStatus(scope.row.beforeStatus) }}</span>
           </template>
         </el-table-column>
 
 
-
         <el-table-column min-width="20px" label="现状态" prop="localStatus">
           <template slot-scope="scope">
-            <span>{{handleStatus(scope.row.localStatus)}}</span>
+            <span>{{ handleStatus(scope.row.localStatus) }}</span>
           </template>
         </el-table-column>
       </el-table>
@@ -411,7 +469,7 @@
 
 <script>
 // 数据接口
-import {fetchAccountList, deleteAccount, fetchAccountParams,updateAccount,queryAccountLog } from '@/api/dct'
+import {fetchAccountList, deleteAccount, fetchAccountParams, updateAccount, queryAccountLog} from '@/api/dct'
 // 按钮动画特效 - 水波纹指令
 import waves from '@/directive/waves'
 import {parseTime} from '@/utils'
@@ -439,7 +497,7 @@ export default {
       tableKey: 0,
       // 列表数据集
       list: null,
-      operator:'',
+      operator: '',
       // 列表数据总计
       total: null,
       // 列表加载状态
@@ -448,17 +506,17 @@ export default {
       // 列表请求条件，既给接口传递的参数
       listQuery: {
         page: 1,
-        assignStatus:[],
+        assignStatus: [],
         limit: 10,
-        uid:[],
-        creator:[],
-        status:[],
-        belongPerson:[],
-        country:[],
-        userGroup:[],
+        uid: [],
+        creator: [],
+        status: [],
+        belongPerson: [],
+        country: [],
+        userGroup: [],
       },
       dialogLog: false,
-      logQuery:{
+      logQuery: {
         uid: '',
         creator: '',
         time: [
@@ -466,7 +524,7 @@ export default {
           this.formatDateToday() + ' 23:59:59'
         ]
       },
-      accountLogList:[],
+      accountLogList: [],
       dateRange: [
         new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 7, 0, 0, 0),
         new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0)
@@ -509,13 +567,13 @@ export default {
         {label: '封号', value: 1},
         {label: '弃用', value: 2}
       ],
-      groupList:[],
+      groupList: [],
       // 列表头部的筛选条件
       uidList: [],
-      userList:[],
-      creatorList:[],
-      userGroupList:[],
-      countryList:[
+      userList: [],
+      creatorList: [],
+      userGroupList: [],
+      countryList: [
         {label: '美国', value: 'us'},
         {label: '英国', value: 'uk'}
       ],
@@ -546,12 +604,11 @@ export default {
         console.log(err)
       })
       this.operator = this.$route.meta.operator
-      this.operator = 'all'
     },
     paresDate(time) {
       return moment(time).format('YYYY-MM-DD HH:mm:ss')
     },
-    handleCanceledit (row) {
+    handleCanceledit(row) {
       row.status = false
     },
     // 获取列表数据
@@ -577,6 +634,8 @@ export default {
         for (const row of response.data.list) {
           row.inputStatusVisible = false
           row.inputUserVisible = false
+          row.inputCategoryVisible = false
+          row.inputNotesVisible = false
           tableList.push(row)
         }
         this.list = tableList
@@ -615,11 +674,11 @@ export default {
           .catch(_ => {
           });
     },
-    handleCountry(str){
-      if(str == 'us'){
+    handleCountry(str) {
+      if (str == 'us') {
         return '美国'
-      }else {
-        return  '英国'
+      } else {
+        return '英国'
       }
     },
     handleSelectConfirm(row, type) {
@@ -633,7 +692,15 @@ export default {
           break;
         case  'belongPerson':
           alert = '是否修改归属人'
-          params = {id: row.id, belongPerson:row.belongPerson}
+          params = {id: row.id, belongPerson: row.belongPerson}
+          break
+        case  'notes':
+          alert = '是否修改备注'
+          params = {id: row.id, notes: row.notes}
+          break
+        case  'category':
+          alert = '是否修改类目'
+          params = {id: row.id, category: row.category}
           break
         default:
       }
@@ -659,23 +726,29 @@ export default {
       })
       row.inputVisible = false
     },
-    queryLogInfo(){
-      queryAccountLog(this.logQuery).then(response =>{
+    queryLogInfo() {
+      queryAccountLog(this.logQuery).then(response => {
         this.accountLogList = response.data
       })
     },
-    closeVisible(type,row){
+    closeVisible(type, row) {
 
-      if(type === 'belongPerson'){
+      if (type === 'belongPerson') {
         row.inputUserVisible = false
       }
-      if(type === 'status'){
+      if (type === 'status') {
         row.inputStatusVisible = false
       }
+      if (type === 'notes') {
+        row.inputNotesVisible = false
+      }
+      if (type === 'category') {
+        row.inputCategoryVisible = false
+      }
     },
-    handleStatus(status){
+    handleStatus(status) {
       let str
-      switch (status){
+      switch (status) {
         case 0:
           str = '正常'
           break;
@@ -690,18 +763,26 @@ export default {
     },
     handleCellDoubleClick(row, column, cell, event) {
       debugger
-      if(column.columnKey === 'status' && this.checkInOperator('update')){
-        row.inputStatusVisible = true
-
+      // if(column.columnKey === 'status' && this.checkInOperator('update')){
+      //   row.inputStatusVisible = true
+      //
+      // }
+      // if(column.columnKey=== 'belongPerson' && this.checkInOperator('update')){
+      //   row.inputUserVisible = true
+      // }
+      if (column.columnKey === 'category' && this.checkInOperator('category')) {
+        row.inputCategoryVisible = true
       }
-      if(column.columnKey=== 'belongPerson' && this.checkInOperator('update')){
-        row.inputUserVisible = true
+
+      if (column.columnKey === 'notes' && this.checkInOperator('notes')) {
+        row.inputNotesVisible = true
       }
     },
-    checkInOperator(operator){
-      if(this.operator.indexOf(operator) > -1 || this.operator.indexOf('all') > -1){
-        return  true
-      }else {
+    checkInOperator(operator) {
+      debugger
+      if (this.operator.indexOf(operator) > -1 || this.operator.indexOf('all') > -1) {
+        return true
+      } else {
         return false
       }
     },
@@ -728,15 +809,15 @@ export default {
     handleToAdd() {
       this.$router.push({path: '/dct/AccountManagement/add'})
     },
-    queryLog(){
+    queryLog() {
       this.dialogLog = true
     },
     handleToUpdate(row) {
       this.$router.push({path: '/dct/AccountManagement/update/' + row.id})
     },
-    handleToDelete(id){
+    handleToDelete(id) {
       const that = this
-      that.$confirm( '删除该账号', {
+      that.$confirm('删除该账号', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -761,9 +842,9 @@ export default {
       this.downloadLoading = true
       import('@/vendor/Export2Excel').then(excel => {
         // 设置导出列
-        const filterVal = ['createTime', 'creator', 'uid', 'belongPerson', 'userGroup', 'country', 'status', 'deliverTime','closeTime']
+        const filterVal = ['createTime', 'creator', 'uid', 'belongPerson', 'userGroup', 'country', 'status', 'deliverTime', 'closeTime']
         // 设置对应数据
-        const tHeader = ['时间', 'Handle', 'UID', '归属人', '组别', '国家', '状态', '交付日期','封号日期']
+        const tHeader = ['时间', 'Handle', 'UID', '归属人', '组别', '国家', '状态', '交付日期', '封号日期']
         const filterList = []
         this.list.forEach((item, index) => {
           filterList.push(item)
@@ -781,12 +862,12 @@ export default {
       return jsonData.map(v => filterVal.map(j => {
         debugger
         if (j === 'createTime' || j === 'deliverTime' || j === 'closeTime') {
-          if(v[j] != null){
+          if (v[j] != null) {
             return parseTime(v[j])
           }
-        } else if(j === 'status'){
+        } else if (j === 'status') {
           return this.handleStatus(v[j])
-        }else {
+        } else {
           return v[j]
         }
       }))
