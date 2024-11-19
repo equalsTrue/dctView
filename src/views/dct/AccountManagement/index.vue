@@ -4,7 +4,8 @@
     <div class="filter-container">
       <el-row>
 
-        <el-select v-model="listQuery.creator" style="margin-left: 20px" multiple collapse-tags  filterable clearable reserve-keyword placeholder="Handle">
+        <el-select v-model="listQuery.creator" style="margin-left: 20px" multiple collapse-tags filterable clearable
+                   reserve-keyword placeholder="Handle">
           <el-option
               v-for="item in creatorList"
               :key="item"
@@ -17,7 +18,8 @@
           </el-option>
         </el-select>
 
-        <el-select v-model="listQuery.uid"  style="margin-left: 20px" multiple collapse-tags filterable clearable reserve-keyword placeholder="UID">
+        <el-select v-model="listQuery.uid" style="margin-left: 20px" multiple collapse-tags filterable clearable
+                   reserve-keyword placeholder="UID">
           <el-option
               v-for="item in uidList"
               :key="item"
@@ -30,7 +32,8 @@
           </el-option>
         </el-select>
 
-        <el-select v-model="listQuery.belongPerson" style="margin-left: 20px" multiple collapse-tags filterable clearable reserve-keyword placeholder="归属人">
+        <el-select v-model="listQuery.belongPerson" style="margin-left: 20px" multiple collapse-tags filterable
+                   clearable reserve-keyword placeholder="归属人">
           <el-option
               v-for="item in userList"
               :key="item"
@@ -44,7 +47,8 @@
         </el-select>
 
 
-        <el-select v-model="listQuery.userGroup" style="margin-left: 20px" multiple collapse-tags filterable clearable reserve-keyword placeholder="组别">
+        <el-select v-model="listQuery.userGroup" style="margin-left: 20px" multiple collapse-tags filterable clearable
+                   reserve-keyword placeholder="组别">
           <el-option
               v-for="item in userGroupList"
               :key="item"
@@ -57,7 +61,8 @@
           </el-option>
         </el-select>
 
-        <el-select v-model="listQuery.country" style="margin-left: 20px" multiple collapse-tags filterable clearable reserve-keyword placeholder="国家">
+        <el-select v-model="listQuery.country" style="margin-left: 20px" multiple collapse-tags filterable clearable
+                   reserve-keyword placeholder="国家">
           <el-option
               v-for="item in countryList"
               :key="item.value"
@@ -68,7 +73,8 @@
         </el-select>
 
 
-        <el-select v-model="listQuery.status" style="margin-left: 20px" multiple collapse-tags filterable clearable reserve-keyword placeholder="状态">
+        <el-select v-model="listQuery.status" style="margin-left: 20px" multiple collapse-tags filterable clearable
+                   reserve-keyword placeholder="状态">
           <el-option
               v-for="item in statusList"
               :key="item.value"
@@ -78,7 +84,8 @@
           </el-option>
         </el-select>
 
-        <el-select v-model="listQuery.assignStatus" style="margin-left: 20px" multiple filterable clearable reserve-keyword placeholder="分配状态">
+        <el-select v-model="listQuery.assignStatus" style="margin-left: 20px" multiple filterable clearable
+                   reserve-keyword placeholder="分配状态">
           <el-option
               v-for="item in assignStatusList"
               :key="item.value"
@@ -168,10 +175,10 @@
       <el-table-column min-width="20px" label="归属人" column-key="belongPerson">
         <template slot-scope="scope">
           <span v-if="!scope.row.inputUserVisible">{{ scope.row.belongPerson }}</span>
-          <div v-if="scope.row.inputUserVisible && checkInOperator('update')" style="width: 30px">
+          <div v-if="scope.row.inputUserVisible && checkInOperator('handle')" style="width: 30px">
             <el-dialog
                 title="更新使用人"
-                :visible.sync="scope.row.inputUserVisible && checkInOperator('update')"
+                :visible.sync="scope.row.inputUserVisible && checkInOperator('handle')"
                 width="30%"
                 :append-to-body="false">
 
@@ -185,13 +192,13 @@
                 </el-option>
               </el-select>
 
-              <el-button type="primary" style="margin-left: 5%" plain size="mini" 
-	      		 :key="scope.row.id + '-Status-selector-confirm'" 
-			 @click="belongPersonSelectConfirm(scope.row,'belongPerson')">{{$t('table.confirm')}}
-	      </el-button>
-              <el-button type="warning" plain size="mini" :key="scope.row.id + '-Status-selector-cancel'" 
-	      		 @click="scope.row.inputUserVisible = false">{{$t('table.cancel')}}
-	      </el-button>
+              <el-button type="primary" style="margin-left: 5%" plain size="mini"
+                         :key="scope.row.id + '-Status-selector-confirm'"
+                         @click="belongPersonSelectConfirm(scope.row,'belongPerson')">{{$t('table.confirm')}}
+              </el-button>
+              <el-button type="warning" plain size="mini" :key="scope.row.id + '-Status-selector-cancel'"
+                         @click="scope.row.inputUserVisible = false">{{$t('table.cancel')}}
+              </el-button>
 
             </el-dialog>
           </div>
@@ -208,10 +215,10 @@
       <el-table-column min-width="20px" label="国家" column-key="country">
         <template slot-scope="scope">
           <span v-if="!scope.row.inputCountryVisible">{{ handleCountry(scope.row.country) }}</span>
-          <div v-if="scope.row.inputCountryVisible && checkInOperator('update')" style="width: 30px">
+          <div v-if="scope.row.inputCountryVisible && checkInOperator('handle')" style="width: 30px">
             <el-dialog
                 title="更新国家"
-                :visible.sync="scope.row.inputCountryVisible && checkInOperator('update')"
+                :visible.sync="scope.row.inputCountryVisible && checkInOperator('handle')"
                 width="30%"
                 :modal-append-to-body="false">
 
@@ -237,10 +244,10 @@
       <el-table-column min-width="20px" label="账号类型" column-key="account_type">
         <template slot-scope="scope">
           <span v-if="!scope.row.inputAccountTypeVisible">{{ scope.row.account_type }}</span>
-          <div v-if="scope.row.inputAccountTypeVisible && checkInOperator('update')" style="width: 30px">
+          <div v-if="scope.row.inputAccountTypeVisible && checkInOperator('handle')" style="width: 30px">
             <el-dialog
                 title="更新账号类型"
-                :visible.sync="scope.row.inputAccountTypeVisible && checkInOperator('update')"
+                :visible.sync="scope.row.inputAccountTypeVisible && checkInOperator('handle')"
                 width="30%"
                 :modal-append-to-body="false">
 
@@ -263,9 +270,32 @@
         </template>
       </el-table-column>
 
-      <el-table-column min-width="20px" label="类目">
+      <el-table-column min-width="20px" label="类目" column-key="category">
         <template slot-scope="scope">
-          <span>{{ scope.row.category }}</span>
+          <span v-if="!scope.row.inputCategoryVisible">{{ scope.row.category }}</span>
+          <div v-if="scope.row.inputCategoryVisible && checkInOperator('category')" style="width: 30px">
+            <el-dialog
+                title="更新类目"
+                :visible.sync="scope.row.inputCategoryVisible && checkInOperator('category')"
+                width="30%"
+                :modal-append-to-body="false">
+
+              <el-input
+                  placeholder="请输入类目"
+                  v-model="scope.row.category"
+                  clearable>
+              </el-input>
+
+              <el-button type="primary" style="margin-left: 1%;margin-top: 3%" plain size="mini"
+                         :key="scope.row.id + '-Status-selector-confirm'"
+                         @click="handleSelectConfirm(scope.row,'category')">{{ $t('table.confirm') }}
+              </el-button>
+              <el-button type="warning" plain size="mini" :key="scope.row.id + '-Status-selector-cancel'"
+                         @click="scope.row.inputCategoryVisible = false">{{ $t('table.cancel') }}
+              </el-button>
+
+            </el-dialog>
+          </div>
         </template>
       </el-table-column>
 
@@ -688,7 +718,6 @@ export default {
         this.listQuery.begin = moment(this.dateRange[0]).format('YYYY-MM-DD')
         this.listQuery.end = moment(this.dateRange[1]).format('YYYY-MM-DD')
       }
-      this.listQuery.assignStatus = [1]
       fetchAccountList(this.listQuery).then(response => {
         this.total = response.data.total
         this.listLoading = false
@@ -757,13 +786,15 @@ export default {
         case  'belongPerson':
           alert = '是否修改归属人'
           params = {id: row.id, belongPerson: row.belongPerson}
-          break
-	case  'notes':
+          break;
+        case  'notes':
           alert = '是否修改备注'
           params = {id: row.id, notes: row.notes}
-      	case  'category':
+          break;
+        case  'category':
           alert = '是否修改类目'
           params = {id: row.id, category: row.category}
+          break;
         case  'country':
           alert = '是否修改国家'
           params = {id: row.id, country: row.country}
@@ -867,19 +898,19 @@ export default {
     },
     handleCellDoubleClick(row, column, cell, event) {
       debugger
-      if(column.columnKey === 'status' && this.checkInOperator('update')){
+      if (column.columnKey === 'status' && this.checkInOperator('handle')) {
         row.inputStatusVisible = true
       }
-      if(column.columnKey=== 'belongPerson' && this.checkInOperator('update')){
+      if (column.columnKey === 'belongPerson' && this.checkInOperator('handle')) {
         row.inputUserVisible = true
       }
-      if(column.columnKey=== 'country' && this.checkInOperator('update')){
+      if (column.columnKey === 'country' && this.checkInOperator('handle')) {
         row.inputCountryVisible = true
       }
       if (column.columnKey === 'category' && this.checkInOperator('category')) {
         row.inputCategoryVisible = true
       }
-      if(column.columnKey=== 'account_type' && this.checkInOperator('update')){
+      if (column.columnKey === 'account_type' && this.checkInOperator('handle')) {
         row.inputAccountTypeVisible = true
       }
       if (column.columnKey === 'notes' && this.checkInOperator('notes')) {
