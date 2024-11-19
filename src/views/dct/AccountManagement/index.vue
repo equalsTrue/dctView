@@ -103,8 +103,8 @@
         <!-- 搜索按钮 -->
 
 
-
-        <el-button v-if="!listLoading" v-waves class="filter-item" type="info" icon="el-icon-search" style="margin-left: 5%"
+        <el-button v-if="!listLoading" v-waves class="filter-item" type="info" icon="el-icon-search"
+                   style="margin-left: 5%"
                    @click="handleFilter">{{ $t('table.search') }}
         </el-button>
         <el-button v-else class="filter-item" type="primary" icon="el-icon-loading">Loading</el-button>
@@ -114,8 +114,8 @@
         </el-button>
 
         <el-button v-waves class="filter-item" style="margin-left: 10px;" type="warning" icon="el-icon-message"
-                   @click="queryLog">查询日志</el-button>
-
+                   @click="queryLog">查询日志
+        </el-button>
 
 
         <!-- 表格导出 -->
@@ -194,10 +194,10 @@
 
               <el-button type="primary" style="margin-left: 5%" plain size="mini"
                          :key="scope.row.id + '-Status-selector-confirm'"
-                         @click="belongPersonSelectConfirm(scope.row,'belongPerson')">{{$t('table.confirm')}}
+                         @click="belongPersonSelectConfirm(scope.row,'belongPerson')">{{ $t('table.confirm') }}
               </el-button>
               <el-button type="warning" plain size="mini" :key="scope.row.id + '-Status-selector-cancel'"
-                         @click="scope.row.inputUserVisible = false">{{$t('table.cancel')}}
+                         @click="scope.row.inputUserVisible = false">{{ $t('table.cancel') }}
               </el-button>
 
             </el-dialog>
@@ -233,8 +233,13 @@
               </el-select>
 
 
-              <el-button type="primary" style="margin-left: 5%" plain size="mini" :key="scope.row.id + '-Status-selector-confirm'" @click="belongPersonSelectConfirm(scope.row,'country')">{{$t('table.confirm')}}</el-button>
-              <el-button type="warning" plain size="mini" :key="scope.row.id + '-Status-selector-cancel'" @click="scope.row.inputCountryVisible = false">{{$t('table.cancel')}}</el-button>
+              <el-button type="primary" style="margin-left: 5%" plain size="mini"
+                         :key="scope.row.id + '-Status-selector-confirm'"
+                         @click="belongPersonSelectConfirm(scope.row,'country')">{{ $t('table.confirm') }}
+              </el-button>
+              <el-button type="warning" plain size="mini" :key="scope.row.id + '-Status-selector-cancel'"
+                         @click="scope.row.inputCountryVisible = false">{{ $t('table.cancel') }}
+              </el-button>
 
             </el-dialog>
           </div>
@@ -262,8 +267,13 @@
               </el-select>
 
 
-              <el-button type="primary" style="margin-left: 5%" plain size="mini" :key="scope.row.id + '-Status-selector-confirm'" @click="handleSelectConfirm(scope.row,'account_type')">{{$t('table.confirm')}}</el-button>
-              <el-button type="warning" plain size="mini" :key="scope.row.id + '-Status-selector-cancel'" @click="scope.row.inputAccountTypeVisible = false">{{$t('table.cancel')}}</el-button>
+              <el-button type="primary" style="margin-left: 5%" plain size="mini"
+                         :key="scope.row.id + '-Status-selector-confirm'"
+                         @click="handleSelectConfirm(scope.row,'account_type')">{{ $t('table.confirm') }}
+              </el-button>
+              <el-button type="warning" plain size="mini" :key="scope.row.id + '-Status-selector-cancel'"
+                         @click="scope.row.inputAccountTypeVisible = false">{{ $t('table.cancel') }}
+              </el-button>
 
             </el-dialog>
           </div>
@@ -301,7 +311,7 @@
 
       <el-table-column min-width="20px" label="分配状态">
         <template slot-scope="scope">
-          <span>{{ scope.row.assignStatus == 0 || scope.row.assignStatus == null  ? '可分配' : '已分配' }}</span>
+          <span>{{ scope.row.assignStatus == 0 || scope.row.assignStatus == null ? '可分配' : '已分配' }}</span>
         </template>
       </el-table-column>
 
@@ -313,11 +323,11 @@
 
       <el-table-column min-width="20px" label="账号状态" column-key="status">
         <template slot-scope="scope">
-          <span v-if="!scope.row.inputStatusVisible" >{{ handleStatus(scope.row.status) }}</span>
-          <div v-if="scope.row.inputStatusVisible && checkInOperator('update')" style="width: 30px">
+          <span v-if="!scope.row.inputStatusVisible">{{ handleStatus(scope.row.status) }}</span>
+          <div v-if="scope.row.inputStatusVisible && checkInOperator('handle')" style="width: 30px">
             <el-dialog
                 title="更新状态"
-                :visible.sync="scope.row.inputStatusVisible && checkInOperator('update')"
+                :visible.sync="scope.row.inputStatusVisible && checkInOperator('handle')"
                 width="30%"
                 :modal-append-to-body="false">
 
@@ -331,11 +341,17 @@
                 </el-option>
               </el-select>
 
-              <el-button type="primary" style="margin-left: 5%" plain size="mini" :key="scope.row.id + '-Status-selector-confirm'" @click="handleSelectConfirm(scope.row,'status')">{{$t('table.confirm')}}</el-button>
-              <el-button type="warning" plain size="mini" :key="scope.row.id + '-Status-selector-cancel'" @click="scope.row.inputStatusVisible = false">{{$t('table.cancel')}}</el-button>
+              <el-button type="primary" style="margin-left: 5%" plain size="mini"
+                         :key="scope.row.id + '-Status-selector-confirm'"
+                         @click="handleSelectConfirm(scope.row,'status')">{{ $t('table.confirm') }}
+              </el-button>
+              <el-button type="warning" plain size="mini" :key="scope.row.id + '-Status-selector-cancel'"
+                         @click="scope.row.inputStatusVisible = false">{{ $t('table.cancel') }}
+              </el-button>
 
             </el-dialog>
-          </div>        </template>
+          </div>
+        </template>
       </el-table-column>
 
 
@@ -415,7 +431,8 @@
       <div class="filter-container">
 
         <el-row>
-          <el-select v-model="logQuery.creator" style="margin-left: 20px" filterable clearable reserve-keyword placeholder="Handle">
+          <el-select v-model="logQuery.creator" style="margin-left: 20px" filterable clearable reserve-keyword
+                     placeholder="Handle">
             <el-option
                 v-for="item in creatorList"
                 :key="item"
@@ -428,7 +445,8 @@
             </el-option>
           </el-select>
 
-          <el-select v-model="logQuery.uid"  style="margin-left: 20px" filterable clearable reserve-keyword placeholder="UID">
+          <el-select v-model="logQuery.uid" style="margin-left: 20px" filterable clearable reserve-keyword
+                     placeholder="UID">
             <el-option
                 v-for="item in uidList"
                 :key="item"
@@ -458,7 +476,8 @@
               :picker-options="pickerOptions">
           </el-date-picker>
 
-          <el-button v-if="!listLoading" v-waves class="filter-item" type="success" icon="el-icon-search" style="margin-left: 5%"
+          <el-button v-if="!listLoading" v-waves class="filter-item" type="success" icon="el-icon-search"
+                     style="margin-left: 5%"
                      @click="queryLogInfo">{{ $t('table.search') }}
           </el-button>
 
@@ -485,7 +504,7 @@
 
         <el-table-column min-width="20px" label="修改前creator" prop="creator">
           <template slot-scope="scope">
-            <span>{{scope.row.handler}}</span>
+            <span>{{ scope.row.handler }}</span>
           </template>
         </el-table-column>
 
@@ -523,13 +542,13 @@
 
         <el-table-column min-width="20px" label="现状态" prop="localStatus">
           <template slot-scope="scope">
-            <span>{{handleStatus(scope.row.localStatus)}}</span>
+            <span>{{ handleStatus(scope.row.localStatus) }}</span>
           </template>
         </el-table-column>
 
         <el-table-column min-width="20px" label="操作人" prop="localStatus">
           <template slot-scope="scope">
-            <span>{{scope.row.manager}}</span>
+            <span>{{ scope.row.manager }}</span>
           </template>
         </el-table-column>
       </el-table>
@@ -653,7 +672,7 @@ export default {
         {label: '可分配', value: 0},
         {label: '已分配', value: 1}
       ],
-      groupList:[],
+      groupList: [],
       // 列表头部的筛选条件
       uidList: [],
       userList: [],
@@ -855,17 +874,17 @@ export default {
       })
       row.inputVisible = false
     },
-    queryLogInfo(){
-      queryAccountLog(this.logQuery).then(response =>{
+    queryLogInfo() {
+      queryAccountLog(this.logQuery).then(response => {
         this.accountLogList = response.data
       })
     },
-    closeVisible(type,row){
+    closeVisible(type, row) {
 
-      if(type === 'belongPerson'){
+      if (type === 'belongPerson') {
         row.inputUserVisible = false
       }
-      if(type === 'status'){
+      if (type === 'status') {
         row.inputStatusVisible = false
       }
       if (type === 'notes') {
@@ -874,16 +893,16 @@ export default {
       if (type === 'category') {
         row.inputCategoryVisible = false
       }
-      if(type === 'country'){
+      if (type === 'country') {
         row.inputCountryVisible = false
       }
-      if(type === 'account_type'){
+      if (type === 'account_type') {
         row.inputAccountTypeVisible = false
       }
     },
-    handleStatus(status){
+    handleStatus(status) {
       let str
-      switch (status){
+      switch (status) {
         case 0:
           str = '正常'
           break;
@@ -917,10 +936,10 @@ export default {
         row.inputNotesVisible = true
       }
     },
-    checkInOperator(operator){
-      if(this.operator.indexOf(operator) > -1 || this.operator.indexOf('all') > -1){
-        return  true
-      }else {
+    checkInOperator(operator) {
+      if (this.operator.indexOf(operator) > -1 || this.operator.indexOf('all') > -1) {
+        return true
+      } else {
         return false
       }
     },
@@ -982,9 +1001,9 @@ export default {
         let exportAccountList = response.data.list
 
         // 设置导出列
-        const filterVal = ['createTime', 'creator', 'uid', 'belongPerson', 'userGroup', 'country', 'status', 'deliverTime','closeTime']
+        const filterVal = ['createTime', 'creator', 'uid', 'belongPerson', 'userGroup', 'country', 'status', 'deliverTime', 'closeTime']
         // 设置对应数据
-        const tHeader = ['时间', 'Handle', 'UID', '归属人', '组别', '国家', '状态', '交付日期','封号日期']
+        const tHeader = ['时间', 'Handle', 'UID', '归属人', '组别', '国家', '状态', '交付日期', '封号日期']
         const filterList = []
         exportAccountList.forEach((item, index) => {
           filterList.push(item)
@@ -1007,12 +1026,12 @@ export default {
       return jsonData.map(v => filterVal.map(j => {
         debugger
         if (j === 'createTime' || j === 'deliverTime' || j === 'closeTime') {
-          if(v[j] != null){
+          if (v[j] != null) {
             return parseTime(v[j])
           }
-        } else if(j === 'status'){
+        } else if (j === 'status') {
           return this.handleStatus(v[j])
-        }else {
+        } else {
           return v[j]
         }
       }))
