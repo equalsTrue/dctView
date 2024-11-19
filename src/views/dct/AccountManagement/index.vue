@@ -194,7 +194,7 @@
 
               <el-button type="primary" style="margin-left: 5%" plain size="mini"
                          :key="scope.row.id + '-Status-selector-confirm'"
-                         @click="belongPersonSelectConfirm(scope.row,'belongPerson')">{{ $t('table.confirm') }}
+                         @click="handleSelectConfirm(scope.row,'belongPerson')">{{ $t('table.confirm') }}
               </el-button>
               <el-button type="warning" plain size="mini" :key="scope.row.id + '-Status-selector-cancel'"
                          @click="scope.row.inputUserVisible = false">{{ $t('table.cancel') }}
