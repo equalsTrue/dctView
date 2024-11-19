@@ -643,6 +643,70 @@ export default {
     // 前往添加页面
     handleToAdd() {
       this.$router.push({path: '/dct/AccountManagement/add'})
+    },
+    handleDownload() {
+      let params = {
+        pageFilterVo: this.listQuery,
+        pageMetricsVo: this.chooseMetricsList,
+        pageGroupVo: this.chooseGroupList,
+      }
+
+      // 先设置下载状态为加载中
+      this.downloadLoading = true
+
+      // 发起异步请求获取导出数据
+      exportGmvList(params, this.user).then(response => {
+        // 获取从接口返回的列表数据
+        let exportGmvList = response.data.pageVO.list;
+
+        // 设置导出列
+        const filterVal = ['date', 'index', 'profile_picture', 'creator', 'belong_person', 'userGroup', 'country', 'gmv', 'creator_commission', 'partner_commission', 'videos', 'video_views', 'addViews'];
+
+        // 设置对应的数据表头
+        const tHeader = ['时间', '排名', '头像', 'Handle', '归属人', '组别', '国家', 'GMV', 'creator佣金', 'partner佣金', '视频数量', '视频总播放量', '新增视频数量'];
+
+        // 处理导出数据
+        var list = []
+        exportGmvList.forEach(item => {
+          list.push(item)
+        })
+
+        // 汇总信息
+        var sumInfo = new Object();
+        filterVal.forEach((itemInfo, index) => {
+          sumInfo[itemInfo] = this.summaryInfo[index]
+        })
+        // 添加汇总数据
+        list.push(sumInfo)
+
+        // 格式化数据
+        const data = this.formatJson(filterVal, list)
+
+        // 导出 Excel 文件
+        import('@/vendor/Export2Excel').then(excel => {
+          excel.export_json_to_excel({
+            header: tHeader,
+            data,
+            filename: '账号数据报表'
+          })
+          // 下载完成后设置加载状态为 false
+          this.downloadLoading = false
+        })
+      }).catch(() => {
+        // 请求失败时的处理
+        this.downloadLoading = false
+      })
+    },
+
+    formatJson(filterVal, jsonData) {
+      // 格式化数据，将每一行数据按照 filterVal 映射为正确的列
+      return jsonData.map(v => filterVal.map(j => {
+        if (j.indexOf("country") > 0) {
+          return this.handleCountry(v[j])
+        } else {
+          return v[j]
+        }
+      }))
     }
   }
 }

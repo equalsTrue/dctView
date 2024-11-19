@@ -245,7 +245,7 @@
 
 <script>
 // 数据接口
-import {fetchProductGmvList,fetchPidGmvParams,findProductName } from '@/api/dct'
+import {fetchProductGmvList, fetchPidGmvParams, findProductName, exportGmvList} from '@/api/dct'
 // 按钮动画特效 - 水波纹指令
 import waves from '@/directive/waves'
 import {parseTime} from '@/utils'
@@ -579,14 +579,22 @@ export default {
       this.getList()
     },
     handleDownload() {
+      let params = {
+        pageFilterVo: this.listQuery,
+        pageMetricsVo: this.chooseMetricsList,
+        pageGroupVo: this.chooseGroupList,
+      }
       this.downloadLoading = true
-      import('@/vendor/Export2Excel').then(excel => {
+      exportGmvList(params, this.user).then(response => {
+        let exportGmvList = response.data.pageVO.list
+
         // 设置导出列
         const filterVal = ['date','index','picture','product_id','level_1_category', 'level_2_category', 'orders', 'gmv', 'videos','video_views']
         // 设置对应数据
         const tHeader = ['时间','排名','图片','PID','一级类目', '二级类目', '销量', 'GMV', '视频数量','视频总播放量']
         var list = []
-        this.list.forEach((item, index) => {
+        exportGmvList.forEach(item => {
+          item.gmv = parseFloat(item.gmv).toFixed(2);
           list.push(item)
         })
         var sumInfo = new Object();
@@ -595,19 +603,24 @@ export default {
         })
         list.push(sumInfo)
         const data = this.formatJson(filterVal, list)
-        excel.export_json_to_excel({
-          header: tHeader,
-          data,
-          filename: '产品数据报表'
+
+        import('@/vendor/Export2Excel').then(excel => {
+          excel.export_json_to_excel({
+            header: tHeader,
+            data,
+            filename: '产品数据报表'
+          })
+          this.downloadLoading = false
         })
+      }).catch(() => {
         this.downloadLoading = false
       })
     },
     formatJson(filterVal, jsonData) {
       return jsonData.map(v => filterVal.map(j => {
-        if(j.indexOf("country") > 0){
+        if (j.indexOf("country") > 0) {
           return this.handleCountry(v[j])
-        }else {
+        } else {
           return v[j]
         }
       }))

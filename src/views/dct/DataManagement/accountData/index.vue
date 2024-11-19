@@ -19,19 +19,18 @@
           </el-option>
         </el-select>
 
-        <el-select v-model="listQuery.creator_type" style="margin-left: 20px" multiple collapse-tags filterable
-                   clearable reserve-keyword placeholder="creator类型">
-          <el-option
-              v-for="item in creatorTypes"
-              :key="item.label"
-              :label="item.label"
-              :value="item.value">
-            <span style="float: left">{{ item.label }}</span>
-            <span v-if="item.label !== item.value" style="float: right; color: #8492a6; font-size: 13px">{{
-                item.value
-              }}</span>
-          </el-option>
-        </el-select>
+        <!--        <el-select v-model="listQuery.creator_type" style="margin-left: 20px" multiple collapse-tags  filterable clearable reserve-keyword placeholder="creator类型">-->
+        <!--          <el-option-->
+        <!--              v-for="item in creatorTypes"-->
+        <!--              :key="item.label"-->
+        <!--              :label="item.label"-->
+        <!--              :value="item.value">-->
+        <!--            <span style="float: left">{{ item.label }}</span>-->
+        <!--            <span v-if="item.label !== item.value" style="float: right; color: #8492a6; font-size: 13px">{{-->
+        <!--                item.value-->
+        <!--              }}</span>-->
+        <!--          </el-option>-->
+        <!--        </el-select>-->
 
         <el-select v-model="listQuery.creator" style="margin-left: 20px" multiple collapse-tags filterable clearable
                    reserve-keyword placeholder="Handle">
@@ -403,7 +402,7 @@
 
 <script>
 // 数据接口
-import {fetchProductGmvList, fetchCreatorGmvParams, selectUserByGroup} from '@/api/dct'
+import {fetchProductGmvList, fetchCreatorGmvParams,selectUserByGroup, exportGmvList} from '@/api/dct'
 // 按钮动画特效 - 水波纹指令
 import waves from '@/directive/waves'
 import {parseTime} from '@/utils'
@@ -454,7 +453,7 @@ export default {
       // 列表请求条件，既给接口传递的参数
       listQuery: {
         account: [],
-        creator_type: [],
+        creator_type: [0],
         creator: [],
         country: [],
         status: [],
@@ -536,10 +535,10 @@ export default {
         {label: '封号', value: 1},
         {label: '弃用', value: 2}
       ],
-      creatorTypes: [
-        {label: '自有账号', value: 0},
-        {label: '其他账号', value: 1}
-      ],
+      // creatorTypes:[
+      //   {label: '自有账号', value: 0},
+      //   {label: '其他账号', value: 1}
+      // ],
       groupList: [],
       // 列表头部的筛选条件
       uidList: [],
@@ -748,8 +747,8 @@ export default {
           sums[index] == '--'
           return;
         }
-        if (dataProperties.indexOf(column.property) >= 0 && (column.property == 'gmv' || column.property == 'commission' || column.property == 'creator_commission' || column.property == 'partner_commission')) {
-          sums[index] = parseFloat(sumsModel[column.property]).toFixed(2)
+        if (dataProperties.indexOf(column.property) >= 0 && (column.property == 'gmv' || column.property == 'commission' || column.property == 'creator_commission' || column.property == 'partner_commission' || column.property == 'estimated_creator_commission' || column.property == 'estimated_partner_commission')) {
+          sums[index] = parseFloat(sumsModel[column.property].toFixed(2));
         } else if (column.property == 'date') {
           sums[index] = this.list.length
         } else {
@@ -909,14 +908,28 @@ export default {
     // },
 
     handleDownload() {
+      let params = {
+        pageFilterVo: this.listQuery,
+        pageMetricsVo: this.chooseMetricsList,
+        pageGroupVo: this.chooseGroupList,
+      }
+
       this.downloadLoading = true
-      import('@/vendor/Export2Excel').then(excel => {
+
+      exportGmvList(params, this.user).then(response => {
+        let exportGmvList = response.data.pageVO.list
+
         // 设置导出列
-        const filterVal = ['date', 'index', 'profile_picture', 'creator', 'belong_person', 'userGroup', 'country', 'gmv', 'creator_commission', 'partner_commission', 'videos', 'video_views', 'addViews']
+        const filterVal = ['date', 'index', 'profile_picture', 'creator', 'belong_person', 'userGroup', 'country', 'gmv', 'estimated_creator_commission', 'creator_commission', 'estimated_partner_commission', 'partner_commission', 'videos', 'video_views', 'addViews']
         // 设置对应数据
-        const tHeader = ['时间', '排名', '头像', 'Handle', '归属人', '组别', '国家', 'GMV', 'creator佣金', 'partner佣金', '视频数量', '视频总播放量', '新增视频数量']
+        const tHeader = ['时间', '排名', '头像', 'Handle', '归属人', '组别', '国家', 'GMV', '预估Creator佣金', 'creator佣金', '预估Partner佣金', 'partner佣金', '视频数量', '视频总播放量', '新增视频数量']
         var list = []
-        this.list.forEach((item, index) => {
+        exportGmvList.forEach(item => {
+          item.gmv = parseFloat(item.gmv).toFixed(2);
+          item.estimated_creator_commission = parseFloat(item.estimated_creator_commission).toFixed(2);
+          item.creator_commission = parseFloat(item.creator_commission).toFixed(2);
+          item.estimated_partner_commission = parseFloat(item.estimated_partner_commission).toFixed(2);
+          item.partner_commission = parseFloat(item.partner_commission).toFixed(2);
           list.push(item)
         })
         var sumInfo = new Object();
@@ -925,11 +938,16 @@ export default {
         })
         list.push(sumInfo)
         const data = this.formatJson(filterVal, list)
-        excel.export_json_to_excel({
-          header: tHeader,
-          data,
-          filename: '账号数据报表'
+
+        import('@/vendor/Export2Excel').then(excel => {
+          excel.export_json_to_excel({
+            header: tHeader,
+            data,
+            filename: '账号数据报表'
+          })
+          this.downloadLoading = false
         })
+      }).catch(() => {
         this.downloadLoading = false
       })
     },

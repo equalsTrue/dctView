@@ -81,7 +81,13 @@ export function fetchAccountList(query){
         data: query
     })
 }
-
+export function exportAccountList(query){
+    return request({
+        url: '/dct/account/export',
+        method: 'post',
+        data: query
+    })
+}
 
 export function fetchAccountParams(){
     return request({
@@ -90,8 +96,8 @@ export function fetchAccountParams(){
     })
 }
 
-export function assignAccount(params
-){
+
+export function assignAccount(params){
     return request({
         url: '/dct/account/assign',
         method: 'post',
@@ -141,6 +147,14 @@ export function queryAccountLog(params){
 export function fetchProductGmvList(params,user){
     return request({
         url: '/dct/gmv/list?user=' + user,
+        method: 'post',
+        data: params
+    })
+}
+
+export function exportGmvList(params){
+    return request({
+        url: '/dct/export/gmv',
         method: 'post',
         data: params
     })

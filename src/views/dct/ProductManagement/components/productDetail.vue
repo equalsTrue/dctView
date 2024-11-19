@@ -60,8 +60,9 @@
               </el-col>
 
               <el-col :span="10">
-                <el-form-item label-width="100px" style="margin-bottom: 40px;margin-left: 20%" label="数量:" prop="count">
-                  <el-input-number placeholder="请输入数量" v-model="formData.count" >
+                <el-form-item label-width="100px" style="margin-bottom: 40px;margin-left: 20%" label="数量:"
+                              prop="count">
+                  <el-input-number placeholder="请输入数量" v-model="formData.count">
                   </el-input-number>
                 </el-form-item>
               </el-col>
@@ -76,8 +77,9 @@
                 </el-form-item>
               </el-col>
               <el-col :span="10">
-                <el-form-item label-width="100px" style="margin-bottom: 40px;margin-left: 17%" label="区域:" prop="region">
-                  <el-select v-model="formData.region" filterable clearable placeholder="请选择区域" >
+                <el-form-item label-width="100px" style="margin-bottom: 40px;margin-left: 17%" label="区域:"
+                              prop="region">
+                  <el-select v-model="formData.region" filterable clearable placeholder="请选择区域">
                     <el-option
                         v-for="item in regions"
                         :key="item.label"
@@ -112,8 +114,9 @@
               </el-col>
 
               <el-col :span="10">
-                <el-form-item label-width="100px" style="margin-bottom: 40px;margin-left: 17%" label="存放地点:" prop="location">
-                  <el-input class="rt-input" v-model="formData.storageLocation"  style="">
+                <el-form-item label-width="100px" style="margin-bottom: 40px;margin-left: 17%" label="存放地点:"
+                              prop="location">
+                  <el-input class="rt-input" v-model="formData.storageLocation" style="">
                   </el-input>
                 </el-form-item>
               </el-col>
