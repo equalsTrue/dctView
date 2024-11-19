@@ -247,7 +247,8 @@ export default {
           if(this.formData.id !== ''){
             this.$router.push({path: '/dct/AccountManagement/index'})
           }else {
-            this.$router.push({path: '/dct/AccountManagement/assignIndex'})
+            // this.$router.push({path: '/dct/AccountManagement/assignIndex'})
+            this.$router.push({path: '/dct/AccountManagement/index'})
           }
         } else {
           this.$notify({
