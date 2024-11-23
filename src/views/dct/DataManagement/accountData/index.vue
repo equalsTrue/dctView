@@ -547,7 +547,7 @@ export default {
       userGroupList: [],
       countryList: [
         {label: '美国', value: 'us'},
-        {label: '英国', value: 'uk'}
+        {label: '英国', value: 'gb'}
       ],
       // 是否显示主键的列
       showId: false,

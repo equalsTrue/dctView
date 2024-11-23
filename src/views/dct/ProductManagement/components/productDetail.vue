@@ -102,7 +102,7 @@
                 <el-form-item label-width="100px" style="margin-bottom: 40px;" label="管理人:" prop="manager">
                   <el-select v-model="formData.manager" filterable clearable placeholder="请选择管理人" >
                     <el-option
-                        v-for="item in users"
+                        v-for="item in managerList"
                         :key="item"
                         :label="item"
                         :value="item">
@@ -140,8 +140,24 @@
                 </el-form-item>
 
               </el-col>
+
+              <el-col :span="6">
+                <el-form-item label-width="100px" style="margin-bottom: 40px;" label="分类:" prop="productClass">
+                  <el-input class="rt-input" v-model="formData.productClass" style="">
+                  </el-input>
+                </el-form-item>
+              </el-col>
+
             </el-row>
 
+            <el-row>
+              <el-col :span="6">
+                <el-form-item label-width="100px" style="margin-bottom: 40px;" label="团长链接:" prop="link">
+                  <el-input class="rt-input" v-model="formData.link" style="">
+                  </el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
           </el-col>
 
 
@@ -167,6 +183,7 @@ const defaultForm = {
   pid: '',
   region: '',
   storageLocation: '',
+  link: '',
   count: 0,
   id: '',
   status: '',
@@ -224,15 +241,17 @@ export default {
       formData: Object.assign({}, defaultForm),
       beforeCommodityData: Object.assign({}, defaultForm),
       localPageUser: '',
-      users:[],
-      statusList:[
+      managerList: [],
+      productClassList: [],
+      linkList: [],
+      statusList: [
         {label: '已申样', value: 0},
         {label: '到库', value: 1},
         {label: '申请中', value: 2},
         {label: '拍摄中', value: 3}
       ],
-      regions:[
-        {label: '英区', value: 'uk'},
+      regions: [
+        {label: '英区', value: 'gb'},
         {label: '美区', value: 'us'},
       ],
       fetchSuccess: true,
@@ -271,9 +290,11 @@ export default {
     }
   },
   methods: {
-    fetchParams(){
-      fetchProductParams().then( response =>{
-          this.users = response.data.user
+    fetchParams() {
+      fetchProductParams().then(response => {
+        this.managerList = response.data.manager
+        this.productClassList = response.data.productClass
+        this.linkList = response.data.link
       })
     },
     generatePictureUrl(pid){

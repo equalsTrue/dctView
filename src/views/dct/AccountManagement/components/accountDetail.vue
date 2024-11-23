@@ -178,7 +178,7 @@ export default {
       userList:[],
       countryList: [
         {label: '美国', value: 'us'},
-        {label: '英国', value: 'uk'}
+        {label: '英国', value: 'gb'}
       ],
       fetchSuccess: true,
       loading: false,
@@ -219,6 +219,7 @@ export default {
       }).catch(err => {
         console.log(err)
       })
+      this.operator = this.$route.meta.operator
     },
 
     fetchData(query) {
@@ -244,12 +245,7 @@ export default {
             type: 'success',
             duration: 2000
           })
-          if(this.formData.id !== ''){
-            this.$router.push({path: '/dct/AccountManagement/index'})
-          }else {
-            // this.$router.push({path: '/dct/AccountManagement/assignIndex'})
-            this.$router.push({path: '/dct/AccountManagement/index'})
-          }
+          this.$router.push({path: '/dct/AccountManagement/index'})
         } else {
           this.$notify({
             title: '失败',

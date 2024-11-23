@@ -680,7 +680,7 @@ export default {
       userGroupList: [],
       countryList: [
         {label: '美国', value: 'us'},
-        {label: '英国', value: 'uk'}
+        {label: '英国', value: 'gb'}
       ],
       accountTypeList: [
         '加白号',

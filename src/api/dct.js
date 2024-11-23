@@ -40,6 +40,14 @@ export function fetchProductList(query) {
     })
 }
 
+export function fetchOutboundList(query) {
+    return request({
+        url: '/dct/product/outboundList',
+        method: 'post',
+        data: query
+    })
+}
+
 export function applyProduct(query) {
     return request({
         url: '/dct/product/apply',
