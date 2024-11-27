@@ -114,10 +114,10 @@
       element-loading-text="拼命加载中"
       border
       fit
+      max-height="70%"
       :summary-method="getSummaries"
       show-summary
       highlight-current-row
-      max-height="500px"
       style="min-width: 100%"
       @selection-change="handleSelectionChange"
       @cell-dblclick="handleCellDoubleClick"

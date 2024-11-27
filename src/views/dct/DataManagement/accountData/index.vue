@@ -682,6 +682,7 @@ export default {
         pageVO: {limit: this.limit, page: this.page, sortColumn: this.sortColumn, sortType: this.sortType}
       }
       fetchProductGmvList(params, this.user).then(response => {
+        this.total = response.data.pageVO.total
         this.listLoading = false
         this.list = response.data.pageVO.list
       }).catch(() => {

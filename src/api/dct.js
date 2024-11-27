@@ -15,7 +15,6 @@ export function fetchProductParams() {
     })
 }
 
-
 export function saveProduct(query) {
     return request({
         url: '/dct/product/save',
@@ -39,7 +38,13 @@ export function fetchProductList(query) {
         data: query
     })
 }
-
+export function exportList(query) {
+    return request({
+        url: '/dct/product/export',
+        method: 'post',
+        data: query
+    })
+}
 export function fetchOutboundList(query) {
     return request({
         url: '/dct/product/outboundList',

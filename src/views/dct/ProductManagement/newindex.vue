@@ -95,14 +95,15 @@
 <!--                   @click="submitApply">批量申请-->
 <!--        </el-button>-->
 
-<!--        <el-button v-waves class="filter-item" style="margin-left: 1%;margin-top: 1%" type="success" icon="el-icon-check" v-if="checkInOperator('approve')"-->
-<!--                   @click="handleToApprove">批量审批-->
-<!--        </el-button>-->
 
 <!--        <el-button v-waves class="filter-item" style="margin-left: 1%;margin-top: 1%" type="warning"-->
 <!--                   icon="el-icon-message"-->
-<!--                   @click="handleSelectConfirm">归还-->
+<!--                   @click="handleToApply">归还-->
 <!--        </el-button>-->
+
+        <el-button v-waves class="filter-item" style="margin-left: 1%;margin-top: 1%" type="success" icon="el-icon-check" v-if="checkInOperator('approve')"
+                   @click="handleSelectConfirm">批量审批
+        </el-button>
 
         <!-- 表格导出 -->
 <!--        <el-button v-waves :loading="downloadLoading" class="filter-item" type="danger" icon="el-icon-download"-->
@@ -182,6 +183,7 @@
         </template>
       </el-table-column>
 
+
       <el-table-column :min-width="calculateWidth" label="状态" column-key="status" align="center">
         <template slot-scope="scope">
           <span v-if="!scope.row.inputStatusVisible" :style=chooseColor(scope.row.status)>{{ handleStatus(scope.row.status) }}</span>
@@ -201,7 +203,7 @@
                 </el-option>
               </el-select>
 
-              <el-button type="primary" style="margin-left: 5%" plain size="mini" :key="scope.row.id + '-Status-selector-confirm'" @click="handleSelectConfirm(scope.row,'status')">{{$t('table.confirm')}}</el-button>
+              <el-button type="primary" style="margin-left: 5%" plain size="mini" :key="scope.row.id + '-Status-selector-confirm'" @click="handleSelectConfirmTo(scope.row,'status')">{{$t('table.confirm')}}</el-button>
               <el-button type="warning" plain size="mini" :key="scope.row.id + '-Status-selector-cancel'" @click="scope.row.inputStatusVisible = false">{{$t('table.cancel')}}</el-button>
 
             </el-dialog>
@@ -362,8 +364,8 @@ export default {
       loading: false,
       // 列表头部的筛选条件
       statusList: [
-        {label: '在库', value: 1},
-        {label: '拍摄中', value: 3}
+        {label: '拍摄中', value: 3},
+        {label: '归还', value: 4}
       ],
       // 列表头部的筛选条件
       productNameList: [],
@@ -500,7 +502,9 @@ export default {
           .catch(_ => {
           });
     },
-    handleSelectConfirm(row, type) {
+    handleSelectConfirmTo(row, type) {
+      const info = {"batchApply":this.multipleSelection}
+      console.log(info)
       let params
       const that = this
       let alert
@@ -528,6 +532,19 @@ export default {
       })
       row.inputVisible = false
     },
+    handleSelectConfirm() {
+      const info = {"batchApply":this.multipleSelection}
+      updateProductInfo(info).then(response => {
+        if(response.code === 200){
+          this.getList()
+          this.$message.success("批量申请成功")
+        }else {
+          this.$message.error("批量申请失败")
+        }
+      }).catch(err => {
+        console.log(err)
+      })
+    },
 
     closeVisible(type, row) {
       if (type === 'applyCount') {
@@ -543,17 +560,11 @@ export default {
     handleStatus(status) {
       let str
       switch (status) {
-        case 0:
-          str = '已申样'
-          break;
-        case 1:
-          str = '在库'
-          break;
-        case 2:
-          str = '申请中'
-          break;
         case 3:
           str = '拍摄中'
+          break;
+        case 4:
+          str = '归还'
           break;
         default:
           str = '未设置'

@@ -407,7 +407,6 @@
               $t('table.delete')
             }}
           </el-button>
-          <!--          <el-button size="mini" type="danger" @click="handleDelete(scope.row)">{{ $t('table.delete') }}</el-button>-->
         </template>
       </el-table-column>
     </el-table>
@@ -434,7 +433,7 @@
           <el-select v-model="logQuery.creator" style="margin-left: 20px" filterable clearable reserve-keyword
                      placeholder="Handle">
             <el-option
-                v-for="item in creatorList"
+                v-for="item in handleList"
                 :key="item"
                 :label="item"
                 :value="item">
@@ -448,7 +447,7 @@
           <el-select v-model="logQuery.uid" style="margin-left: 20px" filterable clearable reserve-keyword
                      placeholder="UID">
             <el-option
-                v-for="item in uidList"
+                v-for="item in logUidList"
                 :key="item"
                 :label="item"
                 :value="item">
@@ -675,8 +674,10 @@ export default {
       groupList: [],
       // 列表头部的筛选条件
       uidList: [],
+      logUidList: [],
       userList: [],
       creatorList: [],
+      handleList: [],
       userGroupList: [],
       countryList: [
         {label: '美国', value: 'us'},
@@ -712,6 +713,8 @@ export default {
         this.uidList = response.data.uid
         this.creatorList = response.data.creator
         this.userGroupList = response.data.userGroup
+        this.handleList = response.data.handles
+        this.logUidList = response.data.logUid
       }).catch(err => {
         console.log(err)
       })

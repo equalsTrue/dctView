@@ -314,7 +314,8 @@
       <!--      </el-table-column>-->
 
 
-      <el-table-column align="center" :label="$t('table.actions')" width="150px" class-name="small-padding fixed-width">
+      <el-table-column align="center" :label="$t('table.actions')" width="150px" class-name="small-padding fixed-width"
+                       v-if="checkInOperator('approve')">
         <template slot-scope="scope">
           <el-button size="mini" type="danger" @click="handleToDelete(scope.row.id)">{{
               $t('table.delete')
@@ -388,7 +389,7 @@ import {
   applyProduct,
   approveProduct,
   batchApplyProduct,
-  updateProductInfo, fetchProductParams
+  updateProductInfo, fetchProductParams, exportList
 } from '@/api/dct'
 // 按钮动画特效 - 水波纹指令
 import waves from '@/directive/waves'
@@ -792,21 +793,27 @@ export default {
 
     handleDownload() {
       this.downloadLoading = true
-      import('@/vendor/Export2Excel').then(excel => {
+      exportList(this.listQuery).then(response => {
+        let exportAccountList = response.data.list
         // 设置导出列
-        const filterVal = ['createTime', 'productName', 'color', 'count', 'manager', 'region', 'storeLocation', 'pid','status','user','applyUser']
+        const filterVal = ['createTime', 'productName', 'color', 'count', 'manager', 'region', 'storeLocation', 'pid', 'status', 'user', 'applyUser']
         // 设置对应数据
-        const tHeader = ['时间', '商品名称', '颜色', '数量', '管理人', '地区', '存放地点', 'PID','状态','使用人','申请人']
+        const tHeader = ['时间', '商品名称', '颜色', '数量', '管理人', '地区', '存放地点', 'PID', '状态', '使用人', '申请人']
         const filterList = []
-        this.list.forEach((item, index) => {
+        exportAccountList.forEach((item, index) => {
           filterList.push(item)
         })
         const data = this.formatJson(filterVal, filterList)
-        excel.export_json_to_excel({
-          header: tHeader,
-          data,
-          filename: '商品报表'
+
+        import('@/vendor/Export2Excel').then(excel => {
+          excel.export_json_to_excel({
+            header: tHeader,
+            data,
+            filename: '商品报表'
+          })
+          this.downloadLoading = false
         })
+      }).catch(() => {
         this.downloadLoading = false
       })
     },
